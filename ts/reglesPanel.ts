@@ -42,9 +42,10 @@ export default class ReglesPanel {
       "Les lettres qui restent sur fond bleu ne sont pas dans le mot.<br />" +
       "</div>" +
       "<p>" +
-      'En cas de soucis, vous pouvez contacter <a href="https://twitter.com/Jonamaths">@Jonamaths</a> sur twitter. −' +
+      'En cas de soucis, vous pouvez contacter <a target="_blank" href="https://twitter.com/Jonamaths">@Jonamaths</a> sur twitter' +
+      ' ou <a target="_blank" href="https://mastodon.social/@JonathanMM">@JonathanMM@mastodon.social</a> sur mastodon. − ' +
       '<a target="_blank" href="https://framagit.org/JonathanMM/sutom">Page du projet</a><br />' +
-      'Basé sur l\'excellent <a target="_blank" href="https://www.powerlanguage.co.uk/wordle/">Wordle</a> et le regretté Motus.<br />' +
+      'Basé sur l\'excellent <a target="_blank" href="https://www.nytimes.com/games/wordle/index.html">Wordle</a> et le regretté Motus.<br />' +
       "Merci à Emmanuel pour l'aide sur les mots à trouver, et à GaranceAmarante pour l'aide sur le dictionnaire." +
       "</p>";
 
