@@ -46,7 +46,8 @@ export default class ReglesPanel {
       ' ou <a target="_blank" href="https://mastodon.social/@JonathanMM">@JonathanMM@mastodon.social</a> sur mastodon. − ' +
       '<a target="_blank" href="https://framagit.org/JonathanMM/sutom">Page du projet</a><br />' +
       'Basé sur l\'excellent <a target="_blank" href="https://www.nytimes.com/games/wordle/index.html">Wordle</a> et le regretté Motus.<br />' +
-      "Merci à Emmanuel pour l'aide sur les mots à trouver, et à GaranceAmarante pour l'aide sur le dictionnaire." +
+      "Merci à Emmanuel pour l'aide sur les mots à trouver, et à GaranceAmarante pour l'aide sur le dictionnaire.<br />" +
+      'Les icônes proviennent de <a target="_blank" href="https://m3.material.io/styles/icons/overview">Material Design</a>' +
       "</p>";
 
     this._panelManager.setContenu(titre, contenu);

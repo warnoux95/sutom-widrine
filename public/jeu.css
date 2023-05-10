@@ -9,11 +9,12 @@
   --couleur-icone: rgb(200, 200, 200);
   --couleur-fond-rgb: 43, 43, 43;
   --couleur-fond: rgb(var(--couleur-fond-rgb));
-  --couleur-bordure: #ffffff;
+  --couleur-bordure: rgb(200, 200, 200);
   --couleur-bordure-grille: #ffffff;
   --couleur-police: #ffffff;
   --couleur-police-grille: #ffffff;
-  --taille-icone: 32px;
+  --taille-icone: 24px;
+  --taille-icone-zone: 48px;
 }
 
 @font-face {
@@ -61,12 +62,24 @@ h1 {
   justify-content: space-around;
 }
 
+#configuration-regles-bouton,
+#configuration-config-bouton,
+#configuration-stats-bouton,
+#configuration-audio-bouton {
+  height: var(--taille-icone-zone);
+  width: var(--taille-icone-zone);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 #configuration-regles-icone,
 #configuration-config-icone,
 #configuration-stats-icone,
 #configuration-audio-icone {
   height: var(--taille-icone);
   width: var(--taille-icone);
+  fill: var(--couleur-icone);
 }
 
 #grille {
@@ -260,12 +273,18 @@ h1 {
 }
 
 #panel-fenetre-bouton-fermeture {
+  width: 48px;
+  height: 48px;
   text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #panel-fenetre-bouton-fermeture-icone {
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
+  fill: var(--couleur-icone);
 }
 
 .config-panel #panel-fenetre-contenu {

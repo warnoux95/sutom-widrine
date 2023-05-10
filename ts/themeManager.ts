@@ -14,7 +14,7 @@ export default class ThemeManager {
         root.style.setProperty("--couleur-mal-place", "#ffbd00");
         root.style.setProperty("--couleur-fond-rgb", "255, 254, 246");
         root.style.setProperty("--couleur-police", "#000000");
-        root.style.setProperty("--couleur-bordure", "#000000");
+        root.style.setProperty("--couleur-bordure", "rgb(55, 55, 55)");
         root.style.setProperty("--couleur-icone", "rgb(55, 55, 55)");
         break;
       case Theme.ClairAccessible:
@@ -22,7 +22,7 @@ export default class ThemeManager {
         root.style.setProperty("--couleur-mal-place", "#db7c00");
         root.style.setProperty("--couleur-fond-rgb", "255, 254, 246");
         root.style.setProperty("--couleur-police", "#000000");
-        root.style.setProperty("--couleur-bordure", "#000000");
+        root.style.setProperty("--couleur-bordure", "rgb(55, 55, 55)");
         root.style.setProperty("--couleur-icone", "rgb(55, 55, 55)");
         break;
       case Theme.SombreAccessible:
@@ -30,7 +30,7 @@ export default class ThemeManager {
         root.style.setProperty("--couleur-mal-place", "#db7c00");
         root.style.setProperty("--couleur-fond-rgb", "43, 43, 43");
         root.style.setProperty("--couleur-police", "#ffffff");
-        root.style.setProperty("--couleur-bordure", "#ffffff");
+        root.style.setProperty("--couleur-bordure", "rgb(200, 200, 200)");
         root.style.setProperty("--couleur-icone", "rgb(200, 200, 200)");
         break;
       default:
@@ -38,7 +38,7 @@ export default class ThemeManager {
         root.style.setProperty("--couleur-mal-place", "#ffbd00");
         root.style.setProperty("--couleur-fond-rgb", "43, 43, 43");
         root.style.setProperty("--couleur-police", "#ffffff");
-        root.style.setProperty("--couleur-bordure", "#ffffff");
+        root.style.setProperty("--couleur-bordure", "rgb(200, 200, 200)");
         root.style.setProperty("--couleur-icone", "rgb(200, 200, 200)");
     }
   }
