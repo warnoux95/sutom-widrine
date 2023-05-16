@@ -51,6 +51,7 @@ export default class Input {
           case "_effacer":
             lettreDiv.dataset["lettre"] = lettre;
             lettreDiv.innerText = "⌫";
+            lettreDiv.classList.add("input-lettre-effacer");
             break;
           case "_entree":
             lettreDiv.innerText = "↲";

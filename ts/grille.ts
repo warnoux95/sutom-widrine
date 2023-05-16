@@ -39,13 +39,20 @@ export default class Grille {
         if (nbMot < this._motActuel || (nbMot === this._motActuel && mot.length !== 0)) {
           if (mot.length <= nbLettre) {
             contenuCellule = ".";
+            cellule.classList.add("cellule-lettre-pas-curseur");
           } else {
             contenuCellule = mot[nbLettre].toUpperCase();
+            cellule.classList.remove("cellule-lettre-pas-curseur");
           }
         } else if (nbMot === this._motActuel) {
           let lettreIndice = this._indice[nbLettre];
-          if (lettreIndice !== undefined) contenuCellule = lettreIndice;
-          else contenuCellule = ".";
+          if (lettreIndice !== undefined) {
+            contenuCellule = lettreIndice;
+            cellule.classList.remove("cellule-lettre-pas-curseur");
+          } else {
+            contenuCellule = ".";
+            cellule.classList.add("cellule-lettre-pas-curseur");
+          }
         }
         if (this._resultats.length > nbMot && this._resultats[nbMot][nbLettre]) {
           let resultat = this._resultats[nbMot][nbLettre];

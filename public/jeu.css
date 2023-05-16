@@ -2,9 +2,9 @@
   --taille-cellule: 48px;
   --epaisseur-bordure-cellule: 1px;
   --epaisseur-padding-cellule: 2px;
-  --couleur-bien-place: #e7002a;
-  --couleur-mal-place: #ffbd00;
-  --couleur-fond-grille: #0077c7;
+  --couleur-bien-place: rgb(231, 0, 42);
+  --couleur-mal-place: rgb(255, 189, 0);
+  --couleur-fond-grille: rgb(0, 119, 199);
   --couleur-non-trouve: rgb(112, 112, 112);
   --couleur-icone: rgb(200, 200, 200);
   --couleur-fond-rgb: 43, 43, 43;
@@ -12,21 +12,33 @@
   --couleur-bordure: rgb(200, 200, 200);
   --couleur-bordure-grille: #ffffff;
   --couleur-police: #ffffff;
-  --couleur-police-grille: #ffffff;
+  --couleur-police-grille: rgb(255, 255, 255);
+  --couleur-police-grille-pas-curseur: rgb(255, 255, 255, 0.65);
+  --couleur-lettre-speciale: rgb(75, 75, 75);
+  --couleur-lettre-survole: rgba(75, 75, 75, 0.65);
+  --couleur-lettre-speciale-survole: rgba(75, 75, 75, 0.65);
+  --couleur-lettre-survole-bien-place: rgba(231, 0, 42, 0.65);
+  --couleur-lettre-survole-mal-place: rgba(255, 189, 0, 0.65);
   --taille-icone: 24px;
   --taille-icone-zone: 48px;
 }
 
 @font-face {
-  font-family: "Roboto Medium";
-  src: url("/fonts/Roboto-Medium.ttf");
+  font-family: "Roboto Regular";
+  src: url("/fonts/Roboto-Regular.ttf");
+}
+
+@font-face {
+  font-family: "RobotoMono Regular";
+  src: url("/fonts/RobotoMono-Regular.ttf");
 }
 
 body {
-  font-family: "Roboto Medium", Ubuntu, Arial, Helvetica, sans-serif;
+  font-family: "Roboto Regular", Ubuntu, Arial, Helvetica, sans-serif;
   font-size: 32px;
   background-color: var(--couleur-fond);
-  height: 100vh;
+  min-height: 100vh;
+  min-height: -webkit-fill-available; /* Seulement pour safari et sa flotting bar */
   text-align: center;
   color: var(--couleur-police);
   margin: 0;
@@ -86,7 +98,7 @@ h1 {
   margin-left: auto;
   margin-right: auto;
   background-color: var(--couleur-fond-grille);
-  min-height: calc(6 * var(--taille-cellule) + 12 * var(--epaisseur-bordure-cellule));
+  min-height: calc(6 * var(--taille-cellule) + 10 * var(--epaisseur-bordure-cellule));
 }
 
 .grille table {
@@ -101,7 +113,7 @@ h1 {
   position: relative;
   padding: var(--epaisseur-padding-cellule);
   color: var(--couleur-police-grille);
-  border: 1px solid var(--couleur-bordure-grille);
+  border: var(--epaisseur-bordure-cellule) solid var(--couleur-bordure-grille);
   z-index: 0;
 }
 
@@ -141,7 +153,7 @@ h1 {
 #input-area {
   margin: 0.5em auto 2em;
   max-width: 100%;
-  width: calc(100% - 20px);
+  width: calc(100% - 5px);
   max-width: 500px;
 }
 
@@ -168,7 +180,7 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: monospace;
+  font-family: "RobotoMono Regular", monospace;
 }
 
 .input-lettre.input-lettre-vide,
@@ -197,11 +209,43 @@ h1 {
 .input-lettre:hover,
 .input-lettre:active {
   cursor: pointer;
+  background-color: var(--couleur-lettre-survole);
+}
+
+.input-lettre.lettre-bien-place:hover,
+.input-lettre.lettre-bien-place:active {
+  background-color: var(--couleur-lettre-survole-bien-place);
+}
+
+.input-lettre.lettre-mal-place:hover,
+.input-lettre.lettre-mal-place:active {
+  background-color: var(--couleur-lettre-survole-mal-place);
 }
 
 .input-lettre.input-lettre-vide:hover,
 .input-lettre.input-lettre-vide:active {
   cursor: initial;
+}
+
+.input-lettre.input-lettre-effacer {
+  font-size: 28px;
+}
+
+.input-lettre.input-lettre-effacer,
+.input-lettre.input-lettre-entree {
+  background-color: var(--couleur-lettre-speciale);
+  border-color: var(--couleur-lettre-speciale);
+}
+
+.input-lettre.input-lettre-effacer:active,
+.input-lettre.input-lettre-effacer:hover,
+.input-lettre.input-lettre-entree:active,
+.input-lettre.input-lettre-entree:hover {
+  background-color: var(--couleur-lettre-speciale-survole);
+}
+
+.grille td.cellule-lettre-pas-curseur {
+  color: var(--couleur-police-grille-pas-curseur);
 }
 
 .regles-panel table {
@@ -223,10 +267,24 @@ h1 {
   color: var(--couleur-police);
 }
 
-#notification,
-#panel-fenetre-notification {
+#notification-area,
+#panel-fenetre-notification-area {
   opacity: 0;
   transition: opacity linear 1s;
+  min-height: 50px;
+}
+
+#notification-label,
+#panel-fenetre-notification-label {
+  font-size: 22px;
+  background-color: #bdbdbd;
+  width: calc(100% - 5px);
+  max-width: 500px;
+  margin: 0px auto;
+  border-radius: 0.5em;
+  padding: 5px 0px;
+  color: black;
+  font-weight: bold;
 }
 
 #panel-area {
