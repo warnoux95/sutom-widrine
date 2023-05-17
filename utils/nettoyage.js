@@ -45,6 +45,7 @@ function ecrireListeNettoyee(dictionnaire) {
 }
 
 fs.readFile("data/mots.txt", "UTF8", function (erreur, contenu) {
+  console.log("Chargement de la liste des mots");
   //console.log(erreur);
   var dictionnaire = contenu
     .split("\n")
@@ -60,7 +61,7 @@ fs.readFile("data/mots.txt", "UTF8", function (erreur, contenu) {
       (mot) =>
         !(mot[0] === mot[0].toUpperCase()) &&
         mot.length >= 6 &&
-        mot.length <= 9 &&
+        mot.length <= 10 &&
         !mot.includes("!") &&
         !mot.includes(" ") &&
         !mot.includes("-") &&
@@ -74,6 +75,7 @@ fs.readFile("data/mots.txt", "UTF8", function (erreur, contenu) {
     .filter(function (elem, index, self) {
       return index === self.indexOf(elem);
     });
+  console.log("Tri du dictionnaire");
   dictionnaire.sort((a, b) => {
     if (a.length < b.length) return -1;
     if (a.length > b.length) return 1;
@@ -87,7 +89,7 @@ fs.readFile("data/mots.txt", "UTF8", function (erreur, contenu) {
   ecrireListeNettoyee(dictionnaire);
   ecrireDictionnaire(dictionnaire);
 
-  let longueurs = [6, 7, 8, 9];
+  let longueurs = [6, 7, 8, 9, 10];
   let initialesPossibles = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "L", "M", "N", "O", "P", "R", "S", "T", "U", "V"];
   for (let longueur of longueurs) {
     for (let initiale of initialesPossibles) {
