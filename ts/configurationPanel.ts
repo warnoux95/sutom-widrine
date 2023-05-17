@@ -35,6 +35,7 @@ export default class ConfigurationPanel {
   public afficher(): void {
     let titre = "Configuration";
     let contenu = document.createElement("div");
+    contenu.id = "config-liste";
     let config = Sauvegardeur.chargerConfig() ?? Configuration.Default;
     contenu.appendChild(
       this.genererConfigItem(

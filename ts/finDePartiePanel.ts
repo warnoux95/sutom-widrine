@@ -153,7 +153,11 @@ export default class FinDePartiePanel {
         </p>";
       }
       contenu +=
-        '<p>Résumé de ta partie − <a href="#" id="fin-de-partie-panel-resume-bouton">Partager</a></p> \
+        '<p>Résumé de ta partie − \
+        <a href="#" id="fin-de-partie-panel-resume-bouton"><svg id="fin-de-partie-panel-resume-bouton-icone"> \
+          <use href="#icone-copie" stroke="var(--couleur-icone)" fill="var(--couleur-icone)"></use> \
+        </svg> \
+        <span id="fin-de-partie-panel-resume-bouton-texte">Partager</span></a></p> \
           <pre id="fin-de-partie-panel-resume">' +
         this._resumeTexteLegacy +
         "</pre>";

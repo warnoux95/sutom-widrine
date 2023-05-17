@@ -351,9 +351,24 @@ h1 {
   gap: 0.5em;
 }
 
+#config-liste {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
 .config-item {
   display: flex;
   justify-content: space-between;
+}
+
+.config-item label {
+  font-size: 20px;
+}
+
+.config-item select {
+  min-width: 20%;
+  text-align: end;
 }
 
 .stats-area {
@@ -376,6 +391,19 @@ h1 {
 .stats-cellule:not(:first-child) {
   padding-left: 0.5em;
   text-align: left;
+}
+
+#fin-de-partie-panel-resume-bouton {
+  text-decoration: none;
+}
+
+#fin-de-partie-panel-resume-bouton-icone {
+  width: 20px;
+  height: 20px;
+}
+
+#fin-de-partie-panel-resume-bouton-texte {
+  text-decoration: underline;
 }
 
 .fin-de-partie-panel-phrase {
