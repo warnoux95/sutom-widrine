@@ -9,8 +9,11 @@ export default class NotificationMessage {
     this.ajouterNotificationDiv(this._notificationArea, this._notificationLabel, message);
   }
 
-  public static ajouterNotificationPanel(message: string): void {
+  public static ajouterNotificationPanel(message: string, origine: HTMLElement): void {
     this.ajouterNotificationDiv(this._notificationPanelArea, this._notificationPanelLabel, message);
+    const { top: topParent, left: leftParent } = origine.getBoundingClientRect();
+    this._notificationPanelArea.style.top = `${topParent + 30}px`;
+    this._notificationPanelArea.style.left = `${leftParent - this._notificationPanelArea.getBoundingClientRect().width / 2}px`;
   }
 
   private static ajouterNotificationDiv(divArea: HTMLElement, divLabel: HTMLElement, message: string): void {

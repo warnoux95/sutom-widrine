@@ -147,7 +147,7 @@ h1 {
 #panel-area {
   display: none;
 
-  font-size: 24px;
+  font-size: 20px;
 }
 
 #input-area {
@@ -272,6 +272,10 @@ h1 {
   opacity: 0;
   transition: opacity linear 1s;
   min-height: 50px;
+}
+
+#panel-fenetre-notification-area {
+  position: absolute;
 }
 
 #notification-label,
