@@ -1,8 +1,8 @@
+import CopieHelper from "./copieHelper";
 import Configuration from "./entites/configuration";
 import LettreResultat from "./entites/lettreResultat";
 import { LettreStatut } from "./entites/lettreStatut";
 import InstanceConfiguration from "./instanceConfiguration";
-import NotificationMessage from "./notificationMessage";
 import PanelManager from "./panelManager";
 import Sauvegardeur from "./sauvegardeur";
 
@@ -104,31 +104,8 @@ export default class FinDePartiePanel {
   }
 
   private attacherPartage(): void {
-    let resumeBouton = document.getElementById("fin-de-partie-panel-resume-bouton") as HTMLElement;
-    resumeBouton.addEventListener("click", (event) => {
-      event.stopPropagation();
-      new Promise((resolve, reject) => {
-        if (window.navigator.clipboard !== undefined) {
-          return resolve(window.navigator.clipboard.writeText(this._resumeTexte + "\n\nhttps://sutom.nocle.fr"));
-        }
-
-        return reject();
-      })
-        .catch(
-          () =>
-            new Promise((resolve, reject) => {
-              if (window.navigator.share !== undefined) return resolve(navigator.share({ text: this._resumeTexte + "\n\nhttps://sutom.nocle.fr" }));
-
-              return reject();
-            })
-        )
-        .then(() => {
-          NotificationMessage.ajouterNotificationPanel("Résumé copié dans le presse-papier.", resumeBouton);
-        })
-        .catch((raison) => {
-          NotificationMessage.ajouterNotificationPanel("Votre navigateur n'est pas compatible.", resumeBouton);
-        });
-    });
+    const resumeBouton = document.getElementById("fin-de-partie-panel-resume-bouton") as HTMLElement;
+    CopieHelper.attacheBoutonCopieLien(resumeBouton, this._resumeTexte + "\n\nhttps://sutom.nocle.fr", "Résumé copié dans le presse papier.");
   }
 
   public afficher(): void {
@@ -152,12 +129,10 @@ export default class FinDePartiePanel {
           Peut-être feras-tu mieux demain ? \
         </p>";
       }
+      contenu += "<p>Résumé de ta partie − ";
+      contenu += CopieHelper.creerBoutonPartage("fin-de-partie-panel-resume-bouton", "Partager").outerHTML;
       contenu +=
-        '<p>Résumé de ta partie − \
-        <a href="#" id="fin-de-partie-panel-resume-bouton"><svg id="fin-de-partie-panel-resume-bouton-icone"> \
-          <use href="#icone-copie" stroke="var(--couleur-icone)" fill="var(--couleur-icone)"></use> \
-        </svg> \
-        <span id="fin-de-partie-panel-resume-bouton-texte">Partager</span></a></p> \
+        '</p> \
           <pre id="fin-de-partie-panel-resume">' +
         this._resumeTexteLegacy +
         "</pre>";

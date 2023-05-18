@@ -2,6 +2,8 @@ import Configuration from "./entites/configuration";
 import PartieEnCours from "./entites/partieEnCours";
 import SauvegardePartie from "./entites/sauvegardePartie";
 import SauvegardeStats from "./entites/sauvegardeStats";
+import LienHelper from "./lienHelper";
+import NotificationMessage from "./notificationMessage";
 
 export default class Sauvegardeur {
   private static readonly _cleStats = "statistiques";
@@ -13,7 +15,21 @@ export default class Sauvegardeur {
   }
 
   public static chargerSauvegardeStats(): SauvegardeStats | undefined {
-    let dataStats = localStorage.getItem(this._cleStats);
+    const contenuLocation = LienHelper.extraireInformation("s");
+
+    if (contenuLocation) {
+      const donneesDepuisLien = Sauvegardeur.chargerInformationDepuisLien(contenuLocation);
+      window.location.hash = "";
+      if (donneesDepuisLien) {
+        NotificationMessage.ajouterNotification("Statistiques chargés avec succès.");
+        Sauvegardeur.sauvegarderStats(donneesDepuisLien);
+        return donneesDepuisLien;
+      }
+
+      NotificationMessage.ajouterNotification("Impossible de charger les statistiques depuis le lien.");
+    }
+
+    const dataStats = localStorage.getItem(this._cleStats);
     if (!dataStats) return;
 
     let stats = JSON.parse(dataStats) as SauvegardeStats;
@@ -65,5 +81,69 @@ export default class Sauvegardeur {
 
     let config = JSON.parse(dataConfig) as Configuration;
     return config;
+  }
+
+  public static genererLien(): string {
+    const stats = Sauvegardeur.chargerSauvegardeStats() ?? SauvegardeStats.Default;
+    return [
+      stats.repartition[1],
+      stats.repartition[2],
+      stats.repartition[3],
+      stats.repartition[4],
+      stats.repartition[5],
+      stats.repartition[6],
+      stats.repartition["-"],
+      stats.lettresRepartitions.bienPlace,
+      stats.lettresRepartitions.malPlace,
+      stats.lettresRepartitions.nonTrouve,
+      stats.dernierePartie,
+    ].join(",");
+  }
+
+  private static chargerInformationDepuisLien(contenu: string): SauvegardeStats | null {
+    const [
+      UnCoupString,
+      DeuxCoupsString,
+      TroisCoupsString,
+      QuatreCoupsString,
+      CinqCoupsString,
+      SixCoupsString,
+      PerduString,
+      LettresBienPlaceesString,
+      LettresMalPlaceesString,
+      LettresNonTrouveString,
+      dernierePartie,
+    ] = contenu.split(",");
+
+    const UnCoup = parseInt(UnCoupString);
+    const DeuxCoups = parseInt(DeuxCoupsString);
+    const TroisCoups = parseInt(TroisCoupsString);
+    const QuatreCoups = parseInt(QuatreCoupsString);
+    const CinqCoups = parseInt(CinqCoupsString);
+    const SixCoups = parseInt(SixCoupsString);
+    const Perdu = parseInt(PerduString);
+    const LettresBienPlacees = parseInt(LettresBienPlaceesString);
+    const LettresMalPlacees = parseInt(LettresMalPlaceesString);
+    const LettresNonTrouve = parseInt(LettresNonTrouveString);
+
+    return {
+      dernierePartie: new Date(dernierePartie),
+      partiesJouees: UnCoup + DeuxCoups + TroisCoups + QuatreCoups + CinqCoups + SixCoups + Perdu,
+      partiesGagnees: UnCoup + DeuxCoups + TroisCoups + QuatreCoups + CinqCoups + SixCoups,
+      repartition: {
+        1: UnCoup,
+        2: DeuxCoups,
+        3: TroisCoups,
+        4: QuatreCoups,
+        5: CinqCoups,
+        6: SixCoups,
+        "-": Perdu,
+      },
+      lettresRepartitions: {
+        bienPlace: LettresBienPlacees,
+        malPlace: LettresMalPlacees,
+        nonTrouve: LettresNonTrouve,
+      },
+    };
   }
 }

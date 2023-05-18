@@ -15,6 +15,7 @@ import ConfigurationPanel from "./configurationPanel";
 import AudioPanel from "./audioPanel";
 import ThemeManager from "./themeManager";
 import InstanceConfiguration from "./instanceConfiguration";
+import LienHelper from "./lienHelper";
 
 export default class Gestionnaire {
   private _grille: Grille | null = null;
@@ -83,19 +84,9 @@ export default class Gestionnaire {
   }
 
   private getIdPartie(partieEnCours: PartieEnCours) {
-    if (window.location.hash !== "" && window.location.hash !== "#") {
-      let hashPart = atob(window.location.hash.substring(1)).split("/");
-      for (let infoPos in hashPart) {
-        let info = hashPart[infoPos];
-        if (!info.includes("=")) continue;
-        let infoPart = info.split("=");
-        let infoKey = infoPart[0];
+    const infoDansLocation = LienHelper.extraireInformation("p");
 
-        if (infoKey !== "p") continue;
-
-        return infoPart[1];
-      }
-    }
+    if (infoDansLocation !== null) return infoDansLocation;
 
     if (partieEnCours.idPartie !== undefined) return partieEnCours.idPartie;
 
@@ -120,6 +111,15 @@ export default class Gestionnaire {
   }
 
   private enregistrerPartieDansStats(): void {
+    // On regarde si c'est le même jour que la dernière partie dans les stats.
+    // Si c'est identique, on ne sauvegarde pas
+    if (
+      this._stats.dernierePartie.getFullYear() === this._datePartieEnCours.getFullYear() &&
+      this._stats.dernierePartie.getMonth() === this._datePartieEnCours.getMonth() &&
+      this._stats.dernierePartie.getDate() === this._datePartieEnCours.getDate()
+    )
+      return;
+
     this._stats.partiesJouees++;
     let estVictoire = this._resultats.some((resultat) => resultat.every((item) => item.statut === LettreStatut.BienPlace));
     if (estVictoire) {

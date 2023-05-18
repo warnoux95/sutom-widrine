@@ -397,22 +397,30 @@ h1 {
   text-align: left;
 }
 
-#fin-de-partie-panel-resume-bouton {
+.bouton-partage {
   text-decoration: none;
 }
 
-#fin-de-partie-panel-resume-bouton-icone {
+.bouton-partage svg {
   width: 20px;
   height: 20px;
 }
 
-#fin-de-partie-panel-resume-bouton-texte {
+.bouton-partage-texte {
   text-decoration: underline;
 }
 
 .fin-de-partie-panel-phrase {
   text-align: left;
   padding-left: 0.5em;
+}
+
+#config-sauvegarde-area {
+  text-align: start;
+}
+
+#config-sauvegarde-area p {
+  margin: 0;
 }
 
 @media (max-width: 1024px) {

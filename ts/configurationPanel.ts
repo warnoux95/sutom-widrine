@@ -7,6 +7,7 @@ import { ClavierDisposition } from "./entites/clavierDisposition";
 import Input from "./input";
 import ThemeManager from "./themeManager";
 import { Theme } from "./entites/theme";
+import CopieHelper from "./copieHelper";
 
 export default class ConfigurationPanel {
   private readonly _panelManager: PanelManager;
@@ -128,6 +129,8 @@ export default class ConfigurationPanel {
       )
     );
 
+    contenu.appendChild(this.genererZoneExportSauvegarde());
+
     this._panelManager.setContenuHtmlElement(titre, contenu);
     this._panelManager.setClasses(["config-panel"]);
     this._panelManager.afficherPanel();
@@ -156,6 +159,52 @@ export default class ConfigurationPanel {
     }
     if (onChange !== undefined) select.addEventListener("change", onChange);
     div.appendChild(select);
+
+    return div;
+  }
+
+  private genererZoneExportSauvegarde(): HTMLElement {
+    let div = document.createElement("div");
+    div.id = "config-sauvegarde-area";
+
+    const titreSection = document.createElement("h3");
+    titreSection.innerText = "Exporter vos statistiques";
+    div.appendChild(titreSection);
+
+    const explication = document.createElement("p");
+    explication.innerText = "Pour transférer vos statistiques sur un autre navigateur, il est possible de suivre les étapes suivantes :";
+    div.appendChild(explication);
+
+    const listeEtape = document.createElement("ol");
+
+    const etape1 = document.createElement("li");
+
+    const etape1Texte = document.createElement("p");
+    etape1Texte.innerText = "Copiez ce lien à usage unique.";
+    etape1.appendChild(etape1Texte);
+
+    const etape1Input = document.createElement("input");
+    const contenuLien = Sauvegardeur.genererLien();
+    const lien = window.location.origin + window.location.pathname + "#" + btoa("s=" + contenuLien);
+    etape1Input.value = lien;
+    etape1Input.readOnly = true;
+    etape1.appendChild(etape1Input);
+
+    const etape1Bouton = CopieHelper.creerBoutonPartage("config-sauvegarde-bouton");
+    CopieHelper.attacheBoutonCopieLien(etape1Bouton, lien, "Lien copié dans le presse papier.");
+    etape1.appendChild(etape1Bouton);
+
+    listeEtape.appendChild(etape1);
+
+    const etape2 = document.createElement("li");
+    etape2.innerText = "Envoyez le lien vers votre autre appareil.";
+    listeEtape.appendChild(etape2);
+
+    const etape3 = document.createElement("li");
+    etape3.innerText = "Ouvrez ce lien dans votre autre navigateur.";
+    listeEtape.appendChild(etape3);
+
+    div.appendChild(listeEtape);
 
     return div;
   }
