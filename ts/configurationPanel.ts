@@ -129,7 +129,30 @@ export default class ConfigurationPanel {
       )
     );
 
-    contenu.appendChild(this.genererZoneExportSauvegarde());
+    contenu.appendChild(
+      this.genererConfigItem(
+        "Retour haptique (si votre navigateur est compatique)",
+        [
+          { value: false.toString(), label: "Non" },
+          { value: true.toString(), label: "Oui" },
+        ],
+        (config.haptique ?? Configuration.Default.haptique).toString(),
+        (event: Event) => {
+          event.stopPropagation();
+          let haptique = (event.target as HTMLSelectElement).value === true.toString();
+
+          Sauvegardeur.sauvegarderConfig({
+            ...(Sauvegardeur.chargerConfig() ?? Configuration.Default),
+            haptique,
+          });
+
+          // On redessine le clavier pour la prise en compte de l'option
+          if (this._input) this._input.dessinerClavier(config.disposition ?? Configuration.Default.disposition);
+        }
+      )
+    );
+
+    if (Sauvegardeur.chargerSauvegardeStats()) contenu.appendChild(this.genererZoneExportSauvegarde());
 
     this._panelManager.setContenuHtmlElement(titre, contenu);
     this._panelManager.setClasses(["config-panel"]);

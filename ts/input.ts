@@ -4,6 +4,7 @@ import { LettreStatut } from "./entites/lettreStatut";
 import { ClavierDisposition } from "./entites/clavierDisposition";
 import Configuration from "./entites/configuration";
 import Dictionnaire from "./dictionnaire";
+import Sauvegardeur from "./sauvegardeur";
 
 export enum ContexteBloquage {
   ValidationMot,
@@ -18,8 +19,9 @@ export default class Input {
 
   private _longueurMot: number;
   private _motSaisi: string;
-  private _estBloque: Array<ContexteBloquage>; // TODO : Faire un dictionnaire pour savoir qui bloque, pour que si c'est bloqué par finDePartie, et que la fermeture de panel essaye de débloquer, ça ne fasse rien
+  private _estBloque: Array<ContexteBloquage>;
   private _resultats: Array<Array<LettreResultat>>;
+  private _haptiqueActive: boolean;
 
   public constructor(gestionnaire: Gestionnaire, configuration: Configuration, longueurMot: number, premiereLettre: string) {
     this._grille = document.getElementById("grille") as HTMLElement;
@@ -30,6 +32,7 @@ export default class Input {
     this._motSaisi = "";
     this._estBloque = new Array<ContexteBloquage>();
     this._resultats = new Array<Array<LettreResultat>>();
+    this._haptiqueActive = configuration.haptique ?? Configuration.Default.haptique;
 
     this.ajouterEvenementClavierPhysique();
 
@@ -73,6 +76,7 @@ export default class Input {
 
       this._inputArea.appendChild(ligneDiv);
     }
+    this._haptiqueActive = Sauvegardeur.chargerConfig()?.haptique ?? Configuration.Default.haptique;
     this.ajouterEvenementClavierVirtuel();
     this.remettrePropositions();
   }
@@ -112,6 +116,7 @@ export default class Input {
         event.stopPropagation();
         let div = event.currentTarget;
         if (!div) return;
+        if (this._haptiqueActive && window.navigator.vibrate) window.navigator.vibrate(75);
         let lettre = (div as HTMLElement).dataset["lettre"];
         if (lettre === undefined) {
           return;

@@ -10,6 +10,7 @@ export default class Configuration {
     volumeSon: VolumeSon.Normal,
     disposition: ClavierDisposition.Azerty,
     theme: Theme.Sombre,
+    haptique: false,
   };
 
   hasAudio: boolean = false;
@@ -18,4 +19,5 @@ export default class Configuration {
   volumeSon: VolumeSon = VolumeSon.Normal;
   disposition: ClavierDisposition = ClavierDisposition.Azerty;
   theme: Theme = Theme.Sombre;
+  haptique: boolean = false;
 }
