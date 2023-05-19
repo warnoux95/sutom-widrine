@@ -469,6 +469,22 @@ h1 {
   padding-left: 0.5em;
 }
 
+.fin-de-partie-panel h3 {
+  text-align: start;
+}
+
+#fin-de-partie-panel-resume-bouton,
+#fin-de-partie-panel-stats-bouton {
+  font-size: 1rem;
+  margin-left: 1rem;
+  position: relative;
+}
+
+.bouton-partage-texte {
+  bottom: 4px;
+  position: absolute;
+}
+
 #config-sauvegarde-area {
   text-align: start;
 }

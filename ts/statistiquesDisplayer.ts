@@ -1,81 +1,63 @@
+import CopieHelper from "./copieHelper";
 import SauvegardeStats from "./entites/sauvegardeStats";
 
 export default class StatistiquesDisplayer {
-  private readonly _stats: SauvegardeStats;
+  public static genererResumeTexte(texte: string): HTMLElement {
+    const area = document.createElement("div");
 
-  public constructor(statistiques: SauvegardeStats) {
-    this._stats = statistiques;
+    const titre = document.createElement("h3");
+    titre.innerText = "Résumé de la partie";
+
+    titre.appendChild(CopieHelper.creerBoutonPartage("fin-de-partie-panel-resume-bouton", "Partager"));
+    area.appendChild(titre);
+
+    const resumeArea = document.createElement("pre");
+    resumeArea.id = "fin-de-partie-panel-resume";
+    resumeArea.innerHTML = texte;
+    area.appendChild(resumeArea);
+
+    return area;
   }
 
-  public genererHtmlStats(): HTMLElement {
-    /*
-contenu +=
-        '<p>Statistiques</p><div class="stats-area"><div class="stats-ligne"><div class="stats-cellule">Parties :</div>' +
-        `<div class="stats-cellule">${stats.partiesGagnees}/${stats.partiesJouees}</div>` +
-        "</div>" +
-        `<div class="stats-ligne"><div class="stats-cellule">1/6 :</div><div class="stats-cellule">${stats.repartition[1]}</div></div>` +
-        `<div class="stats-ligne"><div class="stats-cellule">2/6 :</div><div class="stats-cellule">${stats.repartition[2]}</div></div>` +
-        `<div class="stats-ligne"><div class="stats-cellule">3/6 :</div><div class="stats-cellule">${stats.repartition[3]}</div></div>` +
-        `<div class="stats-ligne"><div class="stats-cellule">4/6 :</div><div class="stats-cellule">${stats.repartition[4]}</div></div>` +
-        `<div class="stats-ligne"><div class="stats-cellule">5/6 :</div><div class="stats-cellule">${stats.repartition[5]}</div></div>` +
-        `<div class="stats-ligne"><div class="stats-cellule">6/6 :</div><div class="stats-cellule">${stats.repartition[6]}</div></div>` +
-        `<div class="stats-ligne"><div class="stats-cellule">-/6 :</div><div class="stats-cellule">${stats.repartition["-"]}</div></div>` +
-        `<div class="stats-ligne"><div class="stats-cellule">Moyenne :</div><div class="stats-cellule">${this.getMoyenne(stats.repartition)}</div></div>` +
-        '<div class="stats-ligne"><div class="stats-cellule">Lettres :</div>' +
-        '<div class="stats-cellule">' +
-        `${stats.lettresRepartitions.bienPlace} 🟥 ` +
-        `${stats.lettresRepartitions.malPlace} 🟡 ` +
-        `${stats.lettresRepartitions.nonTrouve} 🟦` +
-        "</div>" +
-        "</div>" +
-        "</div>";
-        */
-
+  public static genererHtmlStats(stats: SauvegardeStats): HTMLElement {
     const statsArea = document.createElement("div");
     statsArea.className = "stats-area";
 
     const titre = document.createElement("h3");
     titre.innerText = "Statistiques";
+    titre.appendChild(CopieHelper.creerBoutonPartage("fin-de-partie-panel-stats-bouton", "Partager"));
     statsArea.appendChild(titre);
 
     const statsParties = document.createElement("div");
     statsParties.className = "stats-parties";
 
-    const max = Math.max(
-      this._stats.repartition[1],
-      this._stats.repartition[2],
-      this._stats.repartition[3],
-      this._stats.repartition[4],
-      this._stats.repartition[5],
-      this._stats.repartition[6],
-      this._stats.repartition["-"]
-    );
+    const max = this.getMax(stats.repartition);
 
-    statsParties.appendChild(this.creerBar("1", this._stats.repartition[1], max));
-    statsParties.appendChild(this.creerBar("2", this._stats.repartition[2], max));
-    statsParties.appendChild(this.creerBar("3", this._stats.repartition[3], max));
-    statsParties.appendChild(this.creerBar("4", this._stats.repartition[4], max));
-    statsParties.appendChild(this.creerBar("5", this._stats.repartition[5], max));
-    statsParties.appendChild(this.creerBar("6", this._stats.repartition[6], max));
-    statsParties.appendChild(this.creerBar("-", this._stats.repartition["-"], max));
+    statsParties.appendChild(this.creerBar("1", stats.repartition[1], max));
+    statsParties.appendChild(this.creerBar("2", stats.repartition[2], max));
+    statsParties.appendChild(this.creerBar("3", stats.repartition[3], max));
+    statsParties.appendChild(this.creerBar("4", stats.repartition[4], max));
+    statsParties.appendChild(this.creerBar("5", stats.repartition[5], max));
+    statsParties.appendChild(this.creerBar("6", stats.repartition[6], max));
+    statsParties.appendChild(this.creerBar("-", stats.repartition["-"], max));
 
     statsArea.appendChild(statsParties);
 
     const statsNumeriques = document.createElement("div");
     statsNumeriques.className = "stats-numeriques-area";
 
-    statsNumeriques.appendChild(this.creerStatNumerique("Victoires", this._stats.partiesGagnees, this._stats.partiesJouees));
-    statsNumeriques.appendChild(this.creerStatNumerique("Moyenne", this.getMoyenne(this._stats.repartition)));
-    statsNumeriques.appendChild(this.creerStatNumerique("Lettres 🟥", this._stats.lettresRepartitions.bienPlace));
-    statsNumeriques.appendChild(this.creerStatNumerique("Lettres 🟡", this._stats.lettresRepartitions.malPlace));
-    statsNumeriques.appendChild(this.creerStatNumerique("Lettres 🟦", this._stats.lettresRepartitions.nonTrouve));
+    statsNumeriques.appendChild(this.creerStatNumerique("Victoires", stats.partiesGagnees, stats.partiesJouees));
+    statsNumeriques.appendChild(this.creerStatNumerique("Moyenne", this.getMoyenne(stats.repartition)));
+    statsNumeriques.appendChild(this.creerStatNumerique("Lettres 🟥", stats.lettresRepartitions.bienPlace));
+    statsNumeriques.appendChild(this.creerStatNumerique("Lettres 🟡", stats.lettresRepartitions.malPlace));
+    statsNumeriques.appendChild(this.creerStatNumerique("Lettres 🟦", stats.lettresRepartitions.nonTrouve));
 
     statsArea.appendChild(statsNumeriques);
 
     return statsArea;
   }
 
-  private creerBar(label: string, valeur: number, max: number): HTMLElement {
+  private static creerBar(label: string, valeur: number, max: number): HTMLElement {
     const ligne = document.createElement("div");
     ligne.className = "stats-ligne";
 
@@ -105,7 +87,7 @@ contenu +=
     return ligne;
   }
 
-  private creerStatNumerique(label: string, valeur: number, valeurSecondaire?: number): HTMLElement {
+  private static creerStatNumerique(label: string, valeur: number, valeurSecondaire?: number): HTMLElement {
     const caseDiv = document.createElement("div");
     caseDiv.className = "stats-numerique-case";
 
@@ -129,10 +111,40 @@ contenu +=
     return caseDiv;
   }
 
-  private getMoyenne(repartition: { 1: number; 2: number; 3: number; 4: number; 5: number; 6: number; "-": number }): number {
+  private static getMax(repartition: { 1: number; 2: number; 3: number; 4: number; 5: number; 6: number; "-": number }): number {
+    return Math.max(repartition[1], repartition[2], repartition[3], repartition[4], repartition[5], repartition[6], repartition["-"]);
+  }
+
+  private static getMoyenne(repartition: { 1: number; 2: number; 3: number; 4: number; 5: number; 6: number; "-": number }): number {
     return (
       (repartition[1] * 1 + repartition[2] * 2 + repartition[3] * 3 + repartition[4] * 4 + repartition[5] * 5 + repartition[6] * 6 + repartition["-"] * 6) /
       (repartition[1] + repartition[2] + repartition[3] + repartition[4] + repartition[5] + repartition[6] + repartition["-"])
     );
+  }
+
+  public static genererResumeTexteStatistiques(stats: SauvegardeStats): string {
+    const max = this.getMax(stats.repartition);
+
+    return `🟡 Statistiques de #SUTOM 🟡
+
+1/6 - ${this.genererBarTexte(stats.repartition[1], max)} ${stats.repartition[1]}
+2/6 - ${this.genererBarTexte(stats.repartition[2], max)} ${stats.repartition[2]}
+3/6 - ${this.genererBarTexte(stats.repartition[3], max)} ${stats.repartition[3]}
+4/6 - ${this.genererBarTexte(stats.repartition[4], max)} ${stats.repartition[4]}
+5/6 - ${this.genererBarTexte(stats.repartition[5], max)} ${stats.repartition[5]}
+6/6 - ${this.genererBarTexte(stats.repartition[6], max)} ${stats.repartition[6]}
+-/6 - ${this.genererBarTexte(stats.repartition["-"], max)} ${stats.repartition["-"]}
+
+Moy. : ${this.getMoyenne(stats.repartition).toLocaleString("fr-FR", { maximumFractionDigits: 2 })}
+${stats.lettresRepartitions.bienPlace}🟥- ${stats.lettresRepartitions.malPlace}🟡- ${stats.lettresRepartitions.nonTrouve}🟦`;
+  }
+
+  private static genererBarTexte(valeur: number, max: number): string {
+    if (valeur === 0) return "";
+
+    const caractere = valeur === max ? "🟥" : "🟦";
+    const longueurEnNbChars = Math.round((valeur / max) * 8);
+
+    return longueurEnNbChars === 0 ? caractere : caractere.repeat(longueurEnNbChars);
   }
 }

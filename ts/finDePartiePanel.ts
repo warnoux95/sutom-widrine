@@ -2,6 +2,7 @@ import CopieHelper from "./copieHelper";
 import Configuration from "./entites/configuration";
 import LettreResultat from "./entites/lettreResultat";
 import { LettreStatut } from "./entites/lettreStatut";
+import SauvegardeStats from "./entites/sauvegardeStats";
 import InstanceConfiguration from "./instanceConfiguration";
 import PanelManager from "./panelManager";
 import Sauvegardeur from "./sauvegardeur";
@@ -130,25 +131,26 @@ export default class FinDePartiePanel {
           Peut-être feras-tu mieux demain ? \
         </p>";
       }
-      contenu += "<p>Résumé de ta partie − ";
-      contenu += CopieHelper.creerBoutonPartage("fin-de-partie-panel-resume-bouton", "Partager").outerHTML;
-      contenu +=
-        '</p> \
-          <pre id="fin-de-partie-panel-resume">' +
-        this._resumeTexteLegacy +
-        "</pre>";
+      contenu += StatistiquesDisplayer.genererResumeTexte(this._resumeTexteLegacy).outerHTML;
     }
 
     let stats = Sauvegardeur.chargerSauvegardeStats();
     if (stats) {
-      const displayer = new StatistiquesDisplayer(stats);
-
-      contenu += displayer.genererHtmlStats().outerHTML;
+      contenu += StatistiquesDisplayer.genererHtmlStats(stats).outerHTML;
     }
 
     this._panelManager.setContenu(titre, contenu);
     this._panelManager.setClasses(["fin-de-partie-panel"]);
     if (this._partieEstFinie) this.attacherPartage();
+    if (stats) this.attacherPartageStats(stats);
     this._panelManager.afficherPanel();
+  }
+
+  private attacherPartageStats(stats: SauvegardeStats): void {
+    const resumeBouton = document.getElementById("fin-de-partie-panel-stats-bouton") as HTMLElement;
+
+    let resumeTexte = StatistiquesDisplayer.genererResumeTexteStatistiques(stats);
+
+    CopieHelper.attacheBoutonCopieLien(resumeBouton, resumeTexte + "\n\nhttps://sutom.nocle.fr", "Résumé copié dans le presse papier.");
   }
 }
