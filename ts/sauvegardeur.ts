@@ -193,7 +193,7 @@ export default class Sauvegardeur {
       stats.lettresRepartitions.bienPlace,
       stats.lettresRepartitions.malPlace,
       stats.lettresRepartitions.nonTrouve,
-      stats.dernierePartie ? stats.dernierePartie.toISOString : "null",
+      stats.dernierePartie ? stats.dernierePartie.toISOString() : "null",
     ].join(",");
   }
 
