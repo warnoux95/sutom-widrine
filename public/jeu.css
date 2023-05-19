@@ -227,6 +227,7 @@ h1 {
 .input-lettre.input-lettre-vide:hover,
 .input-lettre.input-lettre-vide:active {
   cursor: initial;
+  background-color: transparent;
 }
 
 .input-lettre.input-lettre-effacer {
@@ -234,7 +235,8 @@ h1 {
 }
 
 .input-lettre.input-lettre-effacer,
-.input-lettre.input-lettre-entree {
+.input-lettre.input-lettre-entree,
+.input-lettre[data-lettre="."] {
   background-color: var(--couleur-lettre-speciale);
   border-color: var(--couleur-lettre-speciale);
 }
@@ -242,7 +244,9 @@ h1 {
 .input-lettre.input-lettre-effacer:active,
 .input-lettre.input-lettre-effacer:hover,
 .input-lettre.input-lettre-entree:active,
-.input-lettre.input-lettre-entree:hover {
+.input-lettre.input-lettre-entree:hover,
+.input-lettre[data-lettre="."]:active,
+.input-lettre[data-lettre="."]:hover {
   background-color: var(--couleur-lettre-speciale-survole);
 }
 
@@ -325,7 +329,7 @@ h1 {
   align-content: center;
   justify-content: space-between;
   width: calc(100% - 1em);
-  height: calc(36px + 0.75em);
+  min-height: calc(36px + 0.75em);
   margin-left: 0.5em;
   margin-right: 0.5em;
   margin-top: 0.25em;
@@ -377,6 +381,7 @@ h1 {
 .config-item select {
   min-width: 20%;
   text-align: end;
+  height: min-content;
 }
 
 .stats-parties {
