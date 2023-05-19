@@ -11,6 +11,7 @@ export default class Configuration {
     disposition: ClavierDisposition.Azerty,
     theme: Theme.Sombre,
     haptique: false,
+    changelog: 0,
   };
 
   hasAudio: boolean = false;
@@ -20,4 +21,5 @@ export default class Configuration {
   disposition: ClavierDisposition = ClavierDisposition.Azerty;
   theme: Theme = Theme.Sombre;
   haptique: boolean = false;
+  changelog: number = 0;
 }

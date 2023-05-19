@@ -16,6 +16,7 @@ import AudioPanel from "./audioPanel";
 import ThemeManager from "./themeManager";
 import InstanceConfiguration from "./instanceConfiguration";
 import LienHelper from "./lienHelper";
+import NotesMaJPanel from "./notesMaJPanel";
 
 export default class Gestionnaire {
   private _grille: Grille | null = null;
@@ -28,6 +29,7 @@ export default class Gestionnaire {
   private readonly _panelManager: PanelManager;
   private readonly _themeManager: ThemeManager;
   private readonly _audioPanel: AudioPanel;
+  private readonly _notesMaJPanel: NotesMaJPanel;
 
   private _motATrouver: string = "";
   private _compositionMotATrouver: { [lettre: string]: number } = {};
@@ -67,6 +69,7 @@ export default class Gestionnaire {
     this._reglesPanel = new ReglesPanel(this._panelManager);
     this._finDePartiePanel = new FinDePartiePanel(this._datePartieEnCours, this._panelManager, this);
     this._configurationPanel = new ConfigurationPanel(this._panelManager, this._audioPanel, this._themeManager);
+    this._notesMaJPanel = new NotesMaJPanel(this._panelManager);
 
     this.choisirMot(this._idPartieEnCours, this._datePartieEnCours)
       .then(async (mot) => {
@@ -265,7 +268,12 @@ export default class Gestionnaire {
   }
 
   private afficherReglesSiNecessaire(): void {
-    if (this._config.afficherRegles !== undefined && !this._config.afficherRegles) return;
+    if (this._config.afficherRegles !== undefined && !this._config.afficherRegles) {
+      if (this._config.changelog === undefined || this._config.changelog < InstanceConfiguration.derniereMiseAJour) {
+        this._notesMaJPanel.afficher(this._config.changelog ?? 0);
+      }
+      return;
+    }
 
     this._reglesPanel.afficher();
   }

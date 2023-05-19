@@ -254,7 +254,8 @@ h1 {
   font-size: 32px;
 }
 
-.regles-panel #panel-fenetre {
+.regles-panel #panel-fenetre,
+.notes-panel #panel-fenetre {
   font-size: 14px;
   text-align: left;
 }
