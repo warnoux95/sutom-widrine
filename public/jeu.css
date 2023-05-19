@@ -37,7 +37,7 @@ body {
   font-family: "Roboto Regular", Ubuntu, Arial, Helvetica, sans-serif;
   font-size: 32px;
   background-color: var(--couleur-fond);
-  min-height: 100vh;
+  height: 100vh;
   min-height: -webkit-fill-available; /* Seulement pour safari et sa flotting bar */
   text-align: center;
   color: var(--couleur-police);
@@ -99,6 +99,7 @@ h1 {
   margin-right: auto;
   background-color: var(--couleur-fond-grille);
   min-height: calc(6 * var(--taille-cellule) + 10 * var(--epaisseur-bordure-cellule));
+  margin-bottom: auto;
 }
 
 .grille table {
