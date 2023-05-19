@@ -435,7 +435,7 @@ h1 {
 }
 
 .stats-numerique-case-valeur {
-  font-size: 28px;
+  font-size: 24px;
 }
 
 .stats-numerique-case-secondaire {
@@ -477,16 +477,26 @@ h1 {
   text-align: start;
 }
 
+#fin-de-partie-panel-partie-veille-area {
+  text-align: start;
+}
+
+#fin-de-partie-panel-resume-bouton,
+#fin-de-partie-panel-stats-bouton,
+#fin-de-partie-panel-reset-bouton {
+  font-size: 1rem;
+  position: relative;
+}
+
 #fin-de-partie-panel-resume-bouton,
 #fin-de-partie-panel-stats-bouton {
-  font-size: 1rem;
   margin-left: 1rem;
-  position: relative;
 }
 
 .bouton-partage-texte {
   bottom: 4px;
   position: absolute;
+  width: max-content;
 }
 
 #config-sauvegarde-area {

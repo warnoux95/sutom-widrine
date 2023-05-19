@@ -3,6 +3,7 @@ import Configuration from "./entites/configuration";
 import LettreResultat from "./entites/lettreResultat";
 import { LettreStatut } from "./entites/lettreStatut";
 import SauvegardeStats from "./entites/sauvegardeStats";
+import Gestionnaire from "./gestionnaire";
 import InstanceConfiguration from "./instanceConfiguration";
 import PanelManager from "./panelManager";
 import Sauvegardeur from "./sauvegardeur";
@@ -12,6 +13,7 @@ export default class FinDePartiePanel {
   private readonly _datePartie: Date;
   private readonly _panelManager: PanelManager;
   private readonly _statsButton: HTMLElement;
+  private readonly _gestionnaire: Gestionnaire;
 
   private _resumeTexte: string = "";
   private _resumeTexteLegacy: string = "";
@@ -19,11 +21,12 @@ export default class FinDePartiePanel {
   private _estVictoire: boolean = false;
   private _partieEstFinie: boolean = false;
 
-  public constructor(datePartie: Date, panelManager: PanelManager) {
+  public constructor(datePartie: Date, panelManager: PanelManager, gestionnaire: Gestionnaire) {
     this._datePartie = new Date(datePartie);
     this._datePartie.setHours(0, 0, 0);
     this._panelManager = panelManager;
     this._statsButton = document.getElementById("configuration-stats-bouton") as HTMLElement;
+    this._gestionnaire = gestionnaire;
 
     this._statsButton.addEventListener(
       "click",
@@ -132,6 +135,19 @@ export default class FinDePartiePanel {
         </p>";
       }
       contenu += StatistiquesDisplayer.genererResumeTexte(this._resumeTexteLegacy).outerHTML;
+
+      if (Sauvegardeur.hasPartieVeilleNonTerminee()) {
+        const partieVeilleArea = document.createElement("div");
+        partieVeilleArea.id = "fin-de-partie-panel-partie-veille-area";
+
+        const partieVeilleLabel = document.createElement("div");
+        partieVeilleLabel.innerText = "Il semblerait que vous n'avez pas terminé votre partie d'hier…";
+        partieVeilleArea.appendChild(partieVeilleLabel);
+
+        partieVeilleArea.appendChild(CopieHelper.creerBoutonAvecIcone("fin-de-partie-panel-reset-bouton", "#icone-restaure", "Terminer la partie"));
+
+        contenu += partieVeilleArea.outerHTML;
+      }
     }
 
     let stats = Sauvegardeur.chargerSauvegardeStats();
@@ -143,6 +159,19 @@ export default class FinDePartiePanel {
     this._panelManager.setClasses(["fin-de-partie-panel"]);
     if (this._partieEstFinie) this.attacherPartage();
     if (stats) this.attacherPartageStats(stats);
+
+    const resetButton = document.getElementById("fin-de-partie-panel-reset-bouton") as HTMLElement;
+    if (resetButton) {
+      const veille = new Date();
+      veille.setDate(veille.getDate() - 1);
+      resetButton.addEventListener(
+        "click",
+        (() => {
+          this._gestionnaire.chargerPartieAncienne(veille, Sauvegardeur.chargerPartieVeille());
+          this._panelManager.cacherPanel();
+        }).bind(this)
+      );
+    }
     this._panelManager.afficherPanel();
   }
 

@@ -8,6 +8,7 @@ import NotificationMessage from "./notificationMessage";
 export default class Sauvegardeur {
   private static readonly _cleStats = "statistiques";
   private static readonly _clePartieEnCours = "partieEnCours";
+  private static readonly _clePartieVeille = "partieVeille";
   private static readonly _cleConfiguration = "configuration";
 
   public static sauvegarderStats(stats: SauvegardeStats): void {
@@ -48,19 +49,54 @@ export default class Sauvegardeur {
   }
 
   public static chargerSauvegardePartieEnCours(): PartieEnCours | undefined {
-    let dataPartieEnCours = localStorage.getItem(this._clePartieEnCours);
-    if (!dataPartieEnCours) return;
-
-    let partieEnCours = JSON.parse(dataPartieEnCours) as SauvegardePartie;
     let aujourdhui = new Date();
-    let datePartieEnCours = new Date(partieEnCours.datePartie);
-    if (
-      aujourdhui.getDate() !== datePartieEnCours.getDate() ||
-      aujourdhui.getMonth() !== datePartieEnCours.getMonth() ||
-      aujourdhui.getFullYear() !== datePartieEnCours.getFullYear()
-    ) {
-      localStorage.removeItem(this._clePartieEnCours);
-      return;
+    let partieEnCours: SauvegardePartie;
+    let datePartieEnCours: Date;
+
+    let dataPartieEnCours = localStorage.getItem(this._clePartieEnCours);
+    if (!dataPartieEnCours) {
+      // On regarde si par hasard, on n'a pas la partie du jour dans les infos de la veille
+      const partieVeille = this.getInfoVeille();
+
+      if (
+        partieVeille &&
+        aujourdhui.getDate() === partieVeille.datePartie.getDate() &&
+        aujourdhui.getMonth() === partieVeille.datePartie.getMonth() &&
+        aujourdhui.getFullYear() === partieVeille.datePartie.getFullYear()
+      ) {
+        partieEnCours = partieVeille;
+        datePartieEnCours = partieVeille.datePartie;
+        localStorage.removeItem(this._clePartieVeille);
+      } else {
+        return;
+      }
+    } else {
+      partieEnCours = JSON.parse(dataPartieEnCours) as SauvegardePartie;
+      datePartieEnCours = new Date(partieEnCours.datePartie);
+      if (
+        aujourdhui.getDate() !== datePartieEnCours.getDate() ||
+        aujourdhui.getMonth() !== datePartieEnCours.getMonth() ||
+        aujourdhui.getFullYear() !== datePartieEnCours.getFullYear()
+      ) {
+        // On regarde si par hasard, on n'a pas la partie du jour dans les infos de la veille
+        const partieVeille = this.getInfoVeille();
+
+        if (
+          partieVeille &&
+          aujourdhui.getDate() === partieVeille.datePartie.getDate() &&
+          aujourdhui.getMonth() === partieVeille.datePartie.getMonth() &&
+          aujourdhui.getFullYear() === partieVeille.datePartie.getFullYear()
+        ) {
+          partieEnCours = partieVeille;
+          datePartieEnCours = partieVeille.datePartie;
+          // Et on inverse les données
+          localStorage.setItem(this._clePartieVeille, dataPartieEnCours);
+        } else {
+          localStorage.setItem(this._clePartieVeille, dataPartieEnCours);
+          localStorage.removeItem(this._clePartieEnCours);
+          return;
+        }
+      }
     }
     let dateFinPartie = partieEnCours.dateFinPartie === undefined ? undefined : new Date(partieEnCours.dateFinPartie);
 
@@ -70,6 +106,66 @@ export default class Sauvegardeur {
       propositions: partieEnCours.propositions,
       idPartie: partieEnCours.idPartie,
     };
+  }
+
+  private static getInfoVeille(): SauvegardePartie | undefined {
+    const dataPartieVeille = localStorage.getItem(this._clePartieVeille);
+    if (!dataPartieVeille) return undefined;
+
+    const veille = new Date();
+    veille.setDate(veille.getDate() - 1);
+
+    let partieVeille = JSON.parse(dataPartieVeille) as SauvegardePartie;
+    if (partieVeille.datePartie) partieVeille.datePartie = new Date(partieVeille.datePartie);
+    if (partieVeille.dateFinPartie) partieVeille.dateFinPartie = new Date(partieVeille.dateFinPartie);
+    return partieVeille;
+  }
+
+  public static hasPartieVeilleNonTerminee(): boolean {
+    const partieVeille = this.getInfoVeille();
+    if (!partieVeille) return true;
+
+    const veille = new Date();
+    veille.setDate(veille.getDate() - 1);
+
+    return (
+      veille.getDate() === partieVeille.datePartie.getDate() &&
+      veille.getMonth() === partieVeille.datePartie.getMonth() &&
+      veille.getFullYear() === partieVeille.datePartie.getFullYear() &&
+      !partieVeille.dateFinPartie
+    );
+  }
+
+  public static chargerPartieVeille(): PartieEnCours {
+    const veille = new Date();
+    veille.setDate(veille.getDate() - 1);
+    const partieVeille = this.getInfosPartieVeille(veille);
+    let dateFinPartie = partieVeille.dateFinPartie === undefined ? undefined : new Date(partieVeille.dateFinPartie);
+
+    // On va sauvegarder la partie en cours dans la veille pour ne pas la perde
+    const partieEnCours = localStorage.getItem(this._clePartieEnCours);
+    if (partieEnCours) {
+      localStorage.setItem(this._clePartieVeille, partieEnCours);
+      localStorage.removeItem(this._clePartieEnCours);
+    }
+
+    return {
+      datePartie: new Date(partieVeille.datePartie),
+      dateFinPartie: dateFinPartie,
+      propositions: partieVeille.propositions,
+      idPartie: partieVeille.idPartie,
+    };
+  }
+
+  private static getInfosPartieVeille(veille: Date): SauvegardePartie {
+    const dataPartieVeille = localStorage.getItem(this._clePartieVeille);
+    if (!dataPartieVeille) {
+      const dataPartie = new SauvegardePartie();
+      dataPartie.datePartie = veille;
+      return dataPartie;
+    }
+
+    return JSON.parse(dataPartieVeille) as SauvegardePartie;
   }
 
   public static sauvegarderConfig(config: Configuration): void {

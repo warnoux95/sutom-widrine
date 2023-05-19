@@ -29,6 +29,10 @@ export default class CopieHelper {
   }
 
   public static creerBoutonPartage(idBouton: string, label?: string): HTMLElement {
+    return this.creerBoutonAvecIcone(idBouton, "#icone-copie", label);
+  }
+
+  public static creerBoutonAvecIcone(idBouton: string, icone: string, label?: string): HTMLElement {
     const lien = document.createElement("a");
     lien.id = idBouton;
     lien.className = "bouton-partage";
@@ -36,7 +40,7 @@ export default class CopieHelper {
 
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     const useSvg = document.createElementNS("http://www.w3.org/2000/svg", "use") as SVGUseElement;
-    useSvg.setAttribute("href", "#icone-copie");
+    useSvg.setAttribute("href", icone);
     useSvg.setAttribute("stroke", "var(--couleur-icone)");
     useSvg.setAttribute("fill", "var(--couleur-icone)");
     svg.appendChild(useSvg);
