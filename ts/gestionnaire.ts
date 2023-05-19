@@ -114,6 +114,7 @@ export default class Gestionnaire {
     // On regarde si c'est le même jour que la dernière partie dans les stats.
     // Si c'est identique, on ne sauvegarde pas
     if (
+      this._stats.dernierePartie &&
       this._stats.dernierePartie.getFullYear() === this._datePartieEnCours.getFullYear() &&
       this._stats.dernierePartie.getMonth() === this._datePartieEnCours.getMonth() &&
       this._stats.dernierePartie.getDate() === this._datePartieEnCours.getDate()

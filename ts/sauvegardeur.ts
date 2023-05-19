@@ -33,6 +33,7 @@ export default class Sauvegardeur {
     if (!dataStats) return;
 
     let stats = JSON.parse(dataStats) as SauvegardeStats;
+    if (stats.dernierePartie !== null) stats.dernierePartie = new Date(stats.dernierePartie);
     return stats;
   }
 
