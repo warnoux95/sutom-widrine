@@ -14,12 +14,12 @@ fs.readFile("data/motsATrouve.txt", "UTF8", function (erreur, contenu) {
     let motClean = mot.normalize("NFD").replace(/\p{Diacritic}/gu, "");
     let longueur = motClean.length;
 
-    if (lettres[initiale] === undefined) lettres[initiale] = { 6: 0, 7: 0, 8: 0, 9: 0 };
+    if (lettres[initiale] === undefined) lettres[initiale] = { 6: 0, 7: 0, 8: 0, 9: 0, 10: 0 };
 
     lettres[initiale][longueur.toString()]++;
   }
 
-  console.log("  |  6  |  7  |  8  |  9  |");
+  console.log("  |  6  |  7  |  8  |  9  |  10 |");
   for (let lettre in lettres) {
     let stats = lettres[lettre];
     console.log(
@@ -32,6 +32,8 @@ fs.readFile("data/motsATrouve.txt", "UTF8", function (erreur, contenu) {
         stats["8"].toString().padStart(3) +
         " | " +
         stats["9"].toString().padStart(3) +
+        " |" +
+        stats["10"].toString().padStart(3) +
         " |"
     );
   }

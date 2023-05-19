@@ -21,7 +21,7 @@ function start() {
         motTrouve =
           !(motAnalyse[0] === motAnalyse[0].toUpperCase()) &&
           motAnalyse.length >= 6 &&
-          motAnalyse.length <= 9 &&
+          motAnalyse.length <= 10 &&
           !motAnalyse.includes("!") &&
           !motAnalyse.includes(" ") &&
           !motAnalyse.includes("-") &&

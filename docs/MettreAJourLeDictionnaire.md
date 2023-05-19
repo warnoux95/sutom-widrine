@@ -13,6 +13,6 @@ Ce script va vérifier la liste des mots, ne garder que les mots acceptés dans 
 Liste des règles suivi par les mots :
 
 - Le mot n'est pas un nom propre (qui commence par une majuscule dans le fichier mots.txt)
-- Le mot est entre 6 et 9 lettres
+- Le mot est entre 6 et 10 lettres
 - Le mot ne commence pas par une lettre rare, à savoir : K, Q, W, X, Y, Z
 - Le mot ne contient pas d'espace, d'apostrophe ou de trait d'union

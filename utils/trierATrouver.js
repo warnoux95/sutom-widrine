@@ -26,7 +26,7 @@ fs.readFile("data/motsATrouve.txt", "UTF8", function (erreur, contenu) {
       (mot) =>
         mot &&
         mot.length >= 6 &&
-        mot.length <= 9 &&
+        mot.length <= 10 &&
         !mot.includes("!") &&
         !mot.includes(" ") &&
         !mot.includes("-") &&
