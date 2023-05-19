@@ -10,7 +10,6 @@ export default class NotesMaJPanel {
     {
       version: 500,
       notes: [
-        "Ajout de la possibilité d'avoir des mots de 10 lettres",
         "Revue du design général de l'application",
         "Refonte du mode clair",
         "Refonte de l'affichage des statistiques",
