@@ -97,7 +97,7 @@ export default class Sauvegardeur {
       stats.lettresRepartitions.bienPlace,
       stats.lettresRepartitions.malPlace,
       stats.lettresRepartitions.nonTrouve,
-      stats.dernierePartie,
+      stats.dernierePartie ? stats.dernierePartie.toISOString : "null",
     ].join(",");
   }
 
@@ -128,7 +128,7 @@ export default class Sauvegardeur {
     const LettresNonTrouve = parseInt(LettresNonTrouveString);
 
     return {
-      dernierePartie: new Date(dernierePartie),
+      dernierePartie: dernierePartie === "null" ? null : new Date(dernierePartie),
       partiesJouees: UnCoup + DeuxCoups + TroisCoups + QuatreCoups + CinqCoups + SixCoups + Perdu,
       partiesGagnees: UnCoup + DeuxCoups + TroisCoups + QuatreCoups + CinqCoups + SixCoups,
       repartition: {

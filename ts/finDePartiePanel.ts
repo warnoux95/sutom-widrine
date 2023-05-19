@@ -5,6 +5,7 @@ import { LettreStatut } from "./entites/lettreStatut";
 import InstanceConfiguration from "./instanceConfiguration";
 import PanelManager from "./panelManager";
 import Sauvegardeur from "./sauvegardeur";
+import StatistiquesDisplayer from "./statistiquesDisplayer";
 
 export default class FinDePartiePanel {
   private readonly _datePartie: Date;
@@ -140,38 +141,14 @@ export default class FinDePartiePanel {
 
     let stats = Sauvegardeur.chargerSauvegardeStats();
     if (stats) {
-      contenu +=
-        '<p>Statistiques</p><div class="stats-area"><div class="stats-ligne"><div class="stats-cellule">Parties :</div>' +
-        `<div class="stats-cellule">${stats.partiesGagnees}/${stats.partiesJouees}</div>` +
-        "</div>" +
-        `<div class="stats-ligne"><div class="stats-cellule">1/6 :</div><div class="stats-cellule">${stats.repartition[1]}</div></div>` +
-        `<div class="stats-ligne"><div class="stats-cellule">2/6 :</div><div class="stats-cellule">${stats.repartition[2]}</div></div>` +
-        `<div class="stats-ligne"><div class="stats-cellule">3/6 :</div><div class="stats-cellule">${stats.repartition[3]}</div></div>` +
-        `<div class="stats-ligne"><div class="stats-cellule">4/6 :</div><div class="stats-cellule">${stats.repartition[4]}</div></div>` +
-        `<div class="stats-ligne"><div class="stats-cellule">5/6 :</div><div class="stats-cellule">${stats.repartition[5]}</div></div>` +
-        `<div class="stats-ligne"><div class="stats-cellule">6/6 :</div><div class="stats-cellule">${stats.repartition[6]}</div></div>` +
-        `<div class="stats-ligne"><div class="stats-cellule">-/6 :</div><div class="stats-cellule">${stats.repartition["-"]}</div></div>` +
-        `<div class="stats-ligne"><div class="stats-cellule">Moyenne :</div><div class="stats-cellule">${this.getMoyenne(stats.repartition)}</div></div>` +
-        '<div class="stats-ligne"><div class="stats-cellule">Lettres :</div>' +
-        '<div class="stats-cellule">' +
-        `${stats.lettresRepartitions.bienPlace} 🟥 ` +
-        `${stats.lettresRepartitions.malPlace} 🟡 ` +
-        `${stats.lettresRepartitions.nonTrouve} 🟦` +
-        "</div>" +
-        "</div>" +
-        "</div>";
+      const displayer = new StatistiquesDisplayer(stats);
+
+      contenu += displayer.genererHtmlStats().outerHTML;
     }
 
     this._panelManager.setContenu(titre, contenu);
     this._panelManager.setClasses(["fin-de-partie-panel"]);
     if (this._partieEstFinie) this.attacherPartage();
     this._panelManager.afficherPanel();
-  }
-
-  private getMoyenne(repartition: { 1: number; 2: number; 3: number; 4: number; 5: number; 6: number; "-": number }): string {
-    return (
-      (repartition[1] * 1 + repartition[2] * 2 + repartition[3] * 3 + repartition[4] * 4 + repartition[5] * 5 + repartition[6] * 6 + repartition["-"] * 6) /
-      (repartition[1] + repartition[2] + repartition[3] + repartition[4] + repartition[5] + repartition[6] + repartition["-"])
-    ).toLocaleString("fr-FR", { maximumFractionDigits: 2 });
   }
 }
