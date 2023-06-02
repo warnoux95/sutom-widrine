@@ -157,6 +157,7 @@ h1 {
   max-width: 100%;
   width: calc(100% - 5px);
   max-width: 500px;
+  user-select: none;
 }
 
 .input-ligne {
