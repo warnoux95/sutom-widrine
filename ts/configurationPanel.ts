@@ -131,7 +131,7 @@ export default class ConfigurationPanel {
 
     contenu.appendChild(
       this.genererConfigItem(
-        "Retour haptique (si votre navigateur est compatique)",
+        "Retour haptique (si votre navigateur est compatible)",
         [
           { value: false.toString(), label: "Non" },
           { value: true.toString(), label: "Oui" },
