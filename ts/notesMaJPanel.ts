@@ -8,6 +8,17 @@ export default class NotesMaJPanel {
 
   private readonly _notes = [
     {
+      version: 512,
+      notes: [
+        "Correction du non affichage du bouton Partie de la veille",
+        "Ajustement de la hauteur du jeu sur certains téléphones",
+        "Correction de la couleur de la longue barre des statistiques",
+        "Ajout des couleurs dans les stats pour les terminaux sans emoji",
+        "Correction d'une coquille dans les options",
+        "Résolution d'un problème de selection de texte sur le clavier",
+      ],
+    },
+    {
       version: 500,
       notes: [
         "Revue du design général de l'application",
