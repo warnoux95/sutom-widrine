@@ -129,9 +129,9 @@ export default class Sauvegardeur {
     veille.setDate(veille.getDate() - 1);
 
     return (
-      veille.getDate() === partieVeille.datePartie.getDate() &&
-      veille.getMonth() === partieVeille.datePartie.getMonth() &&
-      veille.getFullYear() === partieVeille.datePartie.getFullYear() &&
+      veille.getDate() !== partieVeille.datePartie.getDate() ||
+      veille.getMonth() !== partieVeille.datePartie.getMonth() ||
+      veille.getFullYear() !== partieVeille.datePartie.getFullYear() ||
       !partieVeille.dateFinPartie
     );
   }
