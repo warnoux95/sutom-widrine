@@ -37,8 +37,9 @@ body {
   font-family: "Roboto Regular", Ubuntu, Arial, Helvetica, sans-serif;
   font-size: 32px;
   background-color: var(--couleur-fond);
-  height: 100vh;
-  min-height: -webkit-fill-available; /* Seulement pour safari et sa flotting bar */
+  max-height: 95vh;
+  height: 95vh;
+  height: -webkit-fill-available; /* Seulement pour safari et sa flotting bar */
   text-align: center;
   color: var(--couleur-police);
   margin: 0;
