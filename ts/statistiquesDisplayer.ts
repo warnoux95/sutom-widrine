@@ -48,9 +48,9 @@ export default class StatistiquesDisplayer {
 
     statsNumeriques.appendChild(this.creerStatNumerique("Victoires", stats.partiesGagnees, stats.partiesJouees));
     statsNumeriques.appendChild(this.creerStatNumerique("Moyenne", this.getMoyenne(stats.repartition)));
-    statsNumeriques.appendChild(this.creerStatNumerique("Lettres 🟥", stats.lettresRepartitions.bienPlace));
-    statsNumeriques.appendChild(this.creerStatNumerique("Lettres 🟡", stats.lettresRepartitions.malPlace));
-    statsNumeriques.appendChild(this.creerStatNumerique("Lettres 🟦", stats.lettresRepartitions.nonTrouve));
+    statsNumeriques.appendChild(this.creerStatNumerique('Lettres <span class="emoji-carre-rouge">🟥</span>', stats.lettresRepartitions.bienPlace));
+    statsNumeriques.appendChild(this.creerStatNumerique('Lettres <span class="emoji-cercle-jaune">🟡</span>', stats.lettresRepartitions.malPlace));
+    statsNumeriques.appendChild(this.creerStatNumerique('Lettres <span class="emoji-carre-bleu">🟦</span>', stats.lettresRepartitions.nonTrouve));
 
     statsArea.appendChild(statsNumeriques);
 
@@ -105,7 +105,7 @@ export default class StatistiquesDisplayer {
 
     const labelDiv = document.createElement("div");
     labelDiv.className = "stats-numerique-case-label";
-    labelDiv.innerText = label;
+    labelDiv.innerHTML = label;
     caseDiv.appendChild(labelDiv);
 
     return caseDiv;
