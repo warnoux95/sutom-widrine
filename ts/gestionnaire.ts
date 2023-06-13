@@ -282,8 +282,21 @@ export default class Gestionnaire {
     let partieEnCours = etatPartie;
 
     this._idPartieEnCours = this.getIdPartie(partieEnCours);
+    const veille = new Date();
+    veille.setDate(veille.getDate() - 1);
 
     if (this._idPartieEnCours !== partieEnCours.idPartie && partieEnCours.idPartie !== undefined) {
+      partieEnCours = new PartieEnCours();
+    }
+
+    if (
+      partieEnCours.datePartie &&
+      !(
+        veille.getDate() === partieEnCours.datePartie.getDate() &&
+        veille.getMonth() === partieEnCours.datePartie.getMonth() &&
+        veille.getFullYear() === partieEnCours.datePartie.getFullYear()
+      )
+    ) {
       partieEnCours = new PartieEnCours();
     }
 

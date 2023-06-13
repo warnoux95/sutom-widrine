@@ -125,13 +125,15 @@ export default class Sauvegardeur {
     const partieVeille = this.getInfoVeille();
     if (!partieVeille) return true;
 
+    const aujourdhui = new Date();
+
     const veille = new Date();
     veille.setDate(veille.getDate() - 1);
 
     return (
-      veille.getDate() !== partieVeille.datePartie.getDate() ||
-      veille.getMonth() !== partieVeille.datePartie.getMonth() ||
-      veille.getFullYear() !== partieVeille.datePartie.getFullYear() ||
+      (aujourdhui.getDate() !== partieVeille.datePartie.getDate() && veille.getDate() !== partieVeille.datePartie.getDate()) ||
+      (aujourdhui.getMonth() !== partieVeille.datePartie.getMonth() && veille.getMonth() !== partieVeille.datePartie.getMonth()) ||
+      (aujourdhui.getFullYear() !== partieVeille.datePartie.getFullYear() && veille.getFullYear() !== partieVeille.datePartie.getFullYear()) ||
       !partieVeille.dateFinPartie
     );
   }
