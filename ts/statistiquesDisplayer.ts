@@ -41,6 +41,7 @@ export default class StatistiquesDisplayer {
     statsParties.appendChild(this.creerBar("5", stats.repartition[5], max));
     statsParties.appendChild(this.creerBar("6", stats.repartition[6], max));
     statsParties.appendChild(this.creerBar("-", stats.repartition["-"], max));
+    statsParties.appendChild(this.creerLigneValeur("Nombre total de parties jouées", this.intToString(stats.partiesJouees)));
 
     statsArea.appendChild(statsParties);
 
@@ -66,14 +67,21 @@ export default class StatistiquesDisplayer {
     return statsArea;
   }
 
+  private static creerLigneValeur(label: string, valeur: string): HTMLElement {
+    const ligne = document.createElement("div");
+    ligne.className = "stats-ligne";
+
+    ligne.appendChild(this.creerDivLabel(label, true));
+    ligne.appendChild(this.creerDivValeur(valeur));
+
+    return ligne;
+  }
+
   private static creerBar(label: string, valeur: number, max: number): HTMLElement {
     const ligne = document.createElement("div");
     ligne.className = "stats-ligne";
 
-    const labelDiv = document.createElement("div");
-    labelDiv.className = "stats-label";
-    labelDiv.innerText = label;
-    ligne.appendChild(labelDiv);
+    ligne.appendChild(this.creerDivLabel(label));
 
     const barAreaDiv = document.createElement("div");
     barAreaDiv.className = "stats-bar-area";
@@ -88,12 +96,24 @@ export default class StatistiquesDisplayer {
     barAreaDiv.appendChild(barDiv);
     ligne.appendChild(barAreaDiv);
 
+    ligne.appendChild(this.creerDivValeur(this.intToString(valeur)));
+
+    return ligne;
+  }
+
+  private static creerDivLabel(label: string, isDouble: boolean = false): HTMLElement {
+    const labelDiv = document.createElement("div");
+    labelDiv.classList.add("stats-label");
+    if (isDouble) labelDiv.classList.add("stats-label-double");
+    labelDiv.innerText = label;
+    return labelDiv;
+  }
+
+  private static creerDivValeur(valeur: string): HTMLElement {
     const valeurDiv = document.createElement("div");
     valeurDiv.className = "stats-valeur";
     valeurDiv.innerText = valeur.toString();
-    ligne.appendChild(valeurDiv);
-
-    return ligne;
+    return valeurDiv;
   }
 
   private static creerStatNumerique(label: string, valeur: string, valeurSecondaire?: string): HTMLElement {

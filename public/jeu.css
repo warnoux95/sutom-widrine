@@ -405,6 +405,11 @@ h1 {
   flex-grow: 1;
 }
 
+.stats-label.stats-label-double {
+  flex-grow: 49;
+  text-align: right;
+}
+
 .stats-bar-area {
   flex-grow: 48;
 }
