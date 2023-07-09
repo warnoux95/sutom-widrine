@@ -113,7 +113,7 @@ export default class Gestionnaire {
     }
   }
 
-  private enregistrerPartieDansStats(): void {
+  private enregistrerPartieDansStats(duree: number): void {
     // On regarde si c'est le même jour que la dernière partie dans les stats.
     // Si c'est identique, on ne sauvegarde pas
     if (
@@ -148,6 +148,20 @@ export default class Gestionnaire {
       return accumulateur;
     }, 0);
     this._stats.dernierePartie = this._datePartieEnCours;
+
+    if (this._config.afficherChrono) {
+      let statsTemps = this._stats.temps;
+      if (statsTemps === null) {
+        statsTemps = { moyenne: duree, nbParties: 1 };
+      } else {
+        statsTemps = {
+          moyenne: (statsTemps.nbParties * statsTemps.moyenne + duree) / (statsTemps.nbParties + 1),
+          nbParties: statsTemps.nbParties + 1,
+        };
+      }
+
+      this._stats.temps = statsTemps;
+    }
 
     Sauvegardeur.sauvegarderStats(this._stats);
   }
@@ -198,9 +212,9 @@ export default class Gestionnaire {
 
     if (isBonneReponse || this._propositions.length === this._maxNbPropositions) {
       if (!this._dateFinPartie) this._dateFinPartie = new Date();
-      let duree = this._dateFinPartie.getTime() - this._datePartieEnCours.getTime();
+      let duree = (this._dateFinPartie.getTime() - this._datePartieEnCours.getTime()) % 86400000;
       this._finDePartiePanel.genererResume(isBonneReponse, this._motATrouver, this._resultats, duree);
-      if (!chargementPartie) this.enregistrerPartieDansStats();
+      if (!chargementPartie) this.enregistrerPartieDansStats(duree);
     }
 
     if (this._grille) {

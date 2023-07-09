@@ -1,5 +1,6 @@
 import CopieHelper from "./copieHelper";
 import SauvegardeStats from "./entites/sauvegardeStats";
+import TempsHelper from "./tempsHelper";
 
 export default class StatistiquesDisplayer {
   public static genererResumeTexte(texte: string): HTMLElement {
@@ -46,11 +47,19 @@ export default class StatistiquesDisplayer {
     const statsNumeriques = document.createElement("div");
     statsNumeriques.className = "stats-numeriques-area";
 
-    statsNumeriques.appendChild(this.creerStatNumerique("Victoires", stats.partiesGagnees, stats.partiesJouees));
-    statsNumeriques.appendChild(this.creerStatNumerique("Moyenne", this.getMoyenne(stats.repartition)));
-    statsNumeriques.appendChild(this.creerStatNumerique('Lettres <span class="emoji-carre-rouge">🟥</span>', stats.lettresRepartitions.bienPlace));
-    statsNumeriques.appendChild(this.creerStatNumerique('Lettres <span class="emoji-cercle-jaune">🟡</span>', stats.lettresRepartitions.malPlace));
-    statsNumeriques.appendChild(this.creerStatNumerique('Lettres <span class="emoji-carre-bleu">🟦</span>', stats.lettresRepartitions.nonTrouve));
+    statsNumeriques.appendChild(this.creerStatNumerique("Victoires", this.intToString(stats.partiesGagnees), this.intToString(stats.partiesJouees)));
+    statsNumeriques.appendChild(this.creerStatNumerique("Moyenne coups", this.intToString(this.getMoyenne(stats.repartition))));
+    statsNumeriques.appendChild(
+      this.creerStatNumerique('Lettres <span class="emoji-carre-rouge">🟥</span>', this.intToString(stats.lettresRepartitions.bienPlace))
+    );
+    statsNumeriques.appendChild(
+      this.creerStatNumerique('Lettres <span class="emoji-cercle-jaune">🟡</span>', this.intToString(stats.lettresRepartitions.malPlace))
+    );
+    statsNumeriques.appendChild(
+      this.creerStatNumerique('Lettres <span class="emoji-carre-bleu">🟦</span>', this.intToString(stats.lettresRepartitions.nonTrouve))
+    );
+    if (stats.temps && stats.temps.nbParties > 0)
+      statsNumeriques.appendChild(this.creerStatNumerique("Temps moyen", TempsHelper.genererTempsHumain(stats.temps.moyenne)));
 
     statsArea.appendChild(statsNumeriques);
 
@@ -87,19 +96,19 @@ export default class StatistiquesDisplayer {
     return ligne;
   }
 
-  private static creerStatNumerique(label: string, valeur: number, valeurSecondaire?: number): HTMLElement {
+  private static creerStatNumerique(label: string, valeur: string, valeurSecondaire?: string): HTMLElement {
     const caseDiv = document.createElement("div");
     caseDiv.className = "stats-numerique-case";
 
     const valeurDiv = document.createElement("div");
     valeurDiv.className = "stats-numerique-case-valeur";
-    valeurDiv.innerText = valeur.toLocaleString("fr-FR", { maximumFractionDigits: 2 });
+    valeurDiv.innerText = valeur;
     caseDiv.appendChild(valeurDiv);
 
     if (valeurSecondaire !== undefined) {
       const secondaireDiv = document.createElement("div");
       secondaireDiv.className = "stats-numerique-case-secondaire";
-      secondaireDiv.innerText = valeurSecondaire.toLocaleString("fr-FR", { maximumFractionDigits: 2 });
+      secondaireDiv.innerText = valeurSecondaire;
       caseDiv.appendChild(secondaireDiv);
     }
 
@@ -109,6 +118,10 @@ export default class StatistiquesDisplayer {
     caseDiv.appendChild(labelDiv);
 
     return caseDiv;
+  }
+
+  private static intToString(valeur: number): string {
+    return valeur.toLocaleString("fr-FR", { maximumFractionDigits: 2 });
   }
 
   private static getMax(repartition: { 1: number; 2: number; 3: number; 4: number; 5: number; 6: number; "-": number }): number {

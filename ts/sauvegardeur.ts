@@ -212,6 +212,8 @@ export default class Sauvegardeur {
       LettresMalPlaceesString,
       LettresNonTrouveString,
       dernierePartie,
+      TempsMoyenneString,
+      TempsNbPartiesString,
     ] = contenu.split(",");
 
     const UnCoup = parseInt(UnCoupString);
@@ -224,6 +226,14 @@ export default class Sauvegardeur {
     const LettresBienPlacees = parseInt(LettresBienPlaceesString);
     const LettresMalPlacees = parseInt(LettresMalPlaceesString);
     const LettresNonTrouve = parseInt(LettresNonTrouveString);
+
+    let tempsPart: { moyenne: number; nbParties: number } | null = null;
+    if (TempsMoyenneString !== undefined && TempsNbPartiesString !== undefined) {
+      tempsPart = {
+        moyenne: parseInt(TempsMoyenneString),
+        nbParties: parseInt(TempsNbPartiesString),
+      };
+    }
 
     return {
       dernierePartie: dernierePartie === "null" ? null : new Date(dernierePartie),
@@ -243,6 +253,7 @@ export default class Sauvegardeur {
         malPlace: LettresMalPlacees,
         nonTrouve: LettresNonTrouve,
       },
+      temps: tempsPart,
     };
   }
 }

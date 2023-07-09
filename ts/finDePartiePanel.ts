@@ -8,6 +8,7 @@ import InstanceConfiguration from "./instanceConfiguration";
 import PanelManager from "./panelManager";
 import Sauvegardeur from "./sauvegardeur";
 import StatistiquesDisplayer from "./statistiquesDisplayer";
+import TempsHelper from "./tempsHelper";
 
 export default class FinDePartiePanel {
   private readonly _datePartie: Date;
@@ -82,30 +83,10 @@ export default class FinDePartiePanel {
       " " +
       (estBonneReponse ? resultats.length : "-") +
       "/6" +
-      (afficherChrono ? " " + this.genererTempsHumain(dureeMs) : "") +
+      (afficherChrono ? " " + TempsHelper.genererTempsHumain(dureeMs) : "") +
       "\n\n";
     this._resumeTexte = entete + resultatsEmojis.join("\n");
     this._resumeTexteLegacy = entete + resultatsEmojisLegacy.join("\n");
-  }
-
-  private genererTempsHumain(dureeMs: number): string {
-    // Note : Durée est en millisecondes.
-    let duree = Math.floor(dureeMs / 1000);
-    let retour = "";
-
-    if (duree >= 3600) {
-      retour += Math.floor(duree / 3600) + "h";
-    }
-
-    retour +=
-      Math.floor((duree / 60) % 60)
-        .toString()
-        .padStart(2, "0") + ":";
-    retour += Math.floor(duree % 60)
-      .toString()
-      .padStart(2, "0");
-
-    return retour;
   }
 
   private attacherPartage(): void {

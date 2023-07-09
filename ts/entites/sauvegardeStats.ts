@@ -17,6 +17,7 @@ export default class SauvegardeStats {
       malPlace: 0,
       nonTrouve: 0,
     },
+    temps: null,
   };
 
   dernierePartie: Date | null = null;
@@ -48,4 +49,8 @@ export default class SauvegardeStats {
     malPlace: 0,
     nonTrouve: 0,
   };
+  temps: {
+    moyenne: number; // en secondes
+    nbParties: number;
+  } | null = null;
 }
