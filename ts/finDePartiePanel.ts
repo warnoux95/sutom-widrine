@@ -128,6 +128,8 @@ export default class FinDePartiePanel {
         partieVeilleArea.appendChild(CopieHelper.creerBoutonAvecIcone("fin-de-partie-panel-reset-bouton", "#icone-restaure", "Terminer la partie"));
 
         contenu += partieVeilleArea.outerHTML;
+      } else {
+        Sauvegardeur.restaurerDonneesDuJour();
       }
     }
 

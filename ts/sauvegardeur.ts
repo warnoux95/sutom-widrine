@@ -48,6 +48,29 @@ export default class Sauvegardeur {
     localStorage.setItem(this._clePartieEnCours, JSON.stringify(partieEnCours));
   }
 
+  public static restaurerDonneesDuJour(): void {
+    const dataPartieEnCours = localStorage.getItem(this._clePartieEnCours);
+    if (!dataPartieEnCours) return;
+    // On regarde si par hasard, on n'a pas la partie du jour dans les infos de la veille
+    const partieVeille = this.getInfoVeille();
+    if (!partieVeille) return;
+    const aujourdhui = new Date();
+
+    if (
+      aujourdhui.getDate() === partieVeille.datePartie.getDate() &&
+      aujourdhui.getMonth() === partieVeille.datePartie.getMonth() &&
+      aujourdhui.getFullYear() === partieVeille.datePartie.getFullYear()
+    ) {
+      // On inverse les deux
+      const dataPartieVeille = localStorage.getItem(this._clePartieVeille);
+      if (!dataPartieVeille) return;
+      localStorage.setItem(this._clePartieEnCours, dataPartieVeille);
+      localStorage.setItem(this._clePartieVeille, dataPartieEnCours);
+    } else {
+      return;
+    }
+  }
+
   public static chargerSauvegardePartieEnCours(): PartieEnCours | undefined {
     let aujourdhui = new Date();
     let partieEnCours: SauvegardePartie;
