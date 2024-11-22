@@ -28,17 +28,20 @@ export default class ReglesPanel {
       "Le mot change chaque jour. Évitez donc les spoils et privilégiez le bouton de partage.<br />" +
       "</p>" +
       '<div class="grille">' +
-      "<table>" +
-      "<tr>" +
-      '<td class="resultat bien-place">S</td>' +
-      '<td class="resultat non-trouve">A</td>' +
-      '<td class="resultat non-trouve">L</td>' +
-      '<td class="resultat mal-place">U</td>' +
-      '<td class="resultat mal-place">T</td>' +
+      '<table role="presentation">' +
+      "<caption>Exemple de proposition</caption>" +
+      '<tr role="group" aria-label="Mot 1 sur 1">' +
+      '<td class="resultat bien-place" aria-label="Lettre S bien placée">S</td>' +
+      '<td class="resultat non-trouve" aria-label="Lettre A non présente">A</td>' +
+      '<td class="resultat non-trouve" aria-label="Lettre L non présente">L</td>' +
+      '<td class="resultat mal-place" aria-label="Lettre U mal placée">U</td>' +
+      '<td class="resultat mal-place" aria-label="Lettre T mal placée">T</td>' +
       "</tr>" +
       "</table>" +
-      "Les lettres entourées d'un carré rouge sont bien placées,<br />" +
-      "les lettres entourées d'un cercle jaune sont mal placées (mais présentes dans le mot).<br />" +
+      "</div>" +
+      "<p>" +
+      "Les lettres entourées d'un carré rouge sont bien placées.<br />" +
+      "Les lettres entourées d'un cercle jaune sont mal placées (mais présentes dans le mot).<br />" +
       "Les lettres qui restent sur fond bleu ne sont pas dans le mot.<br />" +
       "</div>" +
       "<p>" +

@@ -8,6 +8,14 @@ export default class NotesMaJPanel {
 
   private readonly _notes = [
     {
+      version: 851,
+      notes: [
+        "Mise à jour des règles concernant la longueur des mots",
+        "Correction d'un problème avec le bouton Partie de la veille",
+        "Ajout du temps moyen et du nombre total de partie dans les statistiques",
+      ],
+    },
+    {
       version: 512,
       notes: [
         "Correction du non affichage du bouton Partie de la veille",

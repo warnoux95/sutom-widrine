@@ -38,6 +38,34 @@ export default class PanelManager {
         this.cacherPanel();
       }).bind(this)
     );
+
+    this._panelArea.addEventListener(
+      "keydown",
+      ((event: KeyboardEvent) => {
+        if (event.key === "Escape") {
+          event.stopPropagation();
+          this.cacherPanel();
+        } else if (event.key === "Tab") {
+          if (!document.activeElement) return;
+          const elementsWithFocus = this._panelArea.querySelectorAll("a[href], select");
+          let elementsFocusable = [];
+          for (let elementIndex = 0; elementIndex < elementsWithFocus.length; elementIndex++) {
+            elementsFocusable.push(elementsWithFocus.item(elementIndex));
+          }
+          const elementIndex = elementsFocusable.indexOf(document.activeElement);
+          if (elementIndex === -1) return;
+          if (!event.shiftKey && elementIndex === elementsWithFocus.length - 1) {
+            (elementsWithFocus.item(0) as HTMLElement).focus();
+            event.preventDefault();
+          } else if (event.shiftKey && elementIndex === 0) {
+            (elementsWithFocus.item(elementsWithFocus.length - 1) as HTMLElement).focus();
+            event.preventDefault();
+          }
+          console.log("index", elementIndex);
+          console.log("length", elementsWithFocus.length);
+        }
+      }).bind(this)
+    );
   }
 
   public setInput(input: Input): void {
@@ -46,11 +74,16 @@ export default class PanelManager {
 
   public afficherPanel(): void {
     this._panelArea.style.display = "block";
+    this._panelArea.setAttribute("aria-modal", "true");
+    this._panelArea.setAttribute("tabindex", "0");
+    this._panelArea.focus();
     if (this._input) this._input.bloquer(ContexteBloquage.Panel);
   }
 
   public cacherPanel(): void {
     this._panelArea.style.display = "none";
+    this._panelArea.setAttribute("aria-modal", "false");
+    this._panelArea.removeAttribute("tabindex");
     if (this._input) this._input.debloquer(ContexteBloquage.Panel);
   }
 

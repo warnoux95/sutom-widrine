@@ -4,7 +4,7 @@ import fs from "fs";
 import InstanceConfiguration from "./instanceConfiguration";
 
 const app = express();
-const port = parseInt(String(process.env.SUTOM_PORT), 10) || 4000;
+const port = parseInt(String(process.env.SUTOM_PORT), 10) || 4200;
 
 (async () => {
   app.use("/", express.static("public/"));

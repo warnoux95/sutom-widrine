@@ -55,21 +55,25 @@ export default class Input {
             lettreDiv.dataset["lettre"] = lettre;
             lettreDiv.innerText = "⌫";
             lettreDiv.classList.add("input-lettre-effacer");
+            this.ajouterFocus(lettreDiv);
             break;
           case "_entree":
             lettreDiv.innerText = "↲";
             lettreDiv.dataset["lettre"] = lettre;
             lettreDiv.classList.add("input-lettre-entree");
+            this.ajouterFocus(lettreDiv);
             break;
           case "_vide":
             lettreDiv.classList.add("input-lettre-vide");
             break;
           case "_videdouble":
             lettreDiv.classList.add("input-lettre-vide-double");
+            this.ajouterFocus(lettreDiv);
             break;
           default:
             lettreDiv.dataset["lettre"] = lettre;
             lettreDiv.innerText = lettre;
+            this.ajouterFocus(lettreDiv);
         }
         ligneDiv.appendChild(lettreDiv);
       }
@@ -79,6 +83,11 @@ export default class Input {
     this._haptiqueActive = Sauvegardeur.chargerConfig()?.haptique ?? Configuration.Default.haptique;
     this.ajouterEvenementClavierVirtuel();
     this.remettrePropositions();
+  }
+
+  private ajouterFocus(element: HTMLElement): void {
+    element.setAttribute("tabindex", "0");
+    element.setAttribute("role", "button");
   }
 
   private getDisposition(clavier: ClavierDisposition): Array<Array<string>> {
@@ -111,7 +120,7 @@ export default class Input {
   }
 
   private ajouterEvenementClavierVirtuel(): void {
-    this._inputArea.querySelectorAll(".input-lettre").forEach((lettreDiv) =>
+    this._inputArea.querySelectorAll(".input-lettre").forEach((lettreDiv) => {
       lettreDiv.addEventListener("click", (event) => {
         event.stopPropagation();
         let div = event.currentTarget;
@@ -127,8 +136,29 @@ export default class Input {
         } else {
           this.saisirLettre(lettre);
         }
-      })
-    );
+      });
+
+      (lettreDiv as HTMLElement).addEventListener(
+        "keypress",
+        ((event: KeyboardEvent) => {
+          event.stopPropagation();
+          let touche = event.key;
+
+          if (touche === "Enter") {
+            let lettre = (lettreDiv as HTMLElement).dataset["lettre"];
+            if (lettre === undefined) {
+              return;
+            } else if (lettre === "_effacer") {
+              this.effacerLettre();
+            } else if (lettre === "_entree") {
+              this.validerMot();
+            } else {
+              this.saisirLettre(lettre);
+            }
+          }
+        }).bind(this)
+      );
+    });
   }
 
   private ajouterEvenementClavierPhysique(): void {

@@ -40,6 +40,7 @@ export default class ConfigurationPanel {
     let config = Sauvegardeur.chargerConfig() ?? Configuration.Default;
     contenu.appendChild(
       this.genererConfigItem(
+        "volume",
         "Volume du son (si activé)",
         [
           { value: VolumeSon.Faible.toString(), label: "Faible" },
@@ -63,6 +64,7 @@ export default class ConfigurationPanel {
 
     contenu.appendChild(
       this.genererConfigItem(
+        "disposition-clavier",
         "Disposition du clavier",
         [
           { value: ClavierDisposition.Azerty.toString(), label: "AZERTY" },
@@ -87,6 +89,7 @@ export default class ConfigurationPanel {
 
     contenu.appendChild(
       this.genererConfigItem(
+        "theme",
         "Thème",
         [
           { value: Theme.Sombre.toString(), label: "Sombre" },
@@ -111,6 +114,7 @@ export default class ConfigurationPanel {
 
     contenu.appendChild(
       this.genererConfigItem(
+        "afficher-temps",
         "Afficher le temps sur le résumé (à la prochaine partie)",
         [
           { value: false.toString(), label: "Non" },
@@ -131,6 +135,7 @@ export default class ConfigurationPanel {
 
     contenu.appendChild(
       this.genererConfigItem(
+        "haptique",
         "Retour haptique (si votre navigateur est compatible)",
         [
           { value: false.toString(), label: "Non" },
@@ -160,6 +165,7 @@ export default class ConfigurationPanel {
   }
 
   private genererConfigItem(
+    idConfig: string,
     nomConfig: string,
     options: Array<{ value: string; label: string }>,
     valeurChoisie: string,
@@ -170,9 +176,11 @@ export default class ConfigurationPanel {
 
     let label = document.createElement("label");
     label.innerText = nomConfig;
+    label.setAttribute("for", `config-${idConfig}`);
     div.appendChild(label);
 
     let select = document.createElement("select");
+    select.id = `config-${idConfig}`;
     for (let optionItem of options) {
       let optionElement = document.createElement("option");
       optionElement.value = optionItem.value;
