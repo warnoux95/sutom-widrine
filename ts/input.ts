@@ -23,7 +23,12 @@ export default class Input {
   private _resultats: Array<Array<LettreResultat>>;
   private _haptiqueActive: boolean;
 
-  public constructor(gestionnaire: Gestionnaire, configuration: Configuration, longueurMot: number, premiereLettre: string) {
+  public constructor(
+    gestionnaire: Gestionnaire,
+    configuration: Configuration,
+    longueurMot: number,
+    premiereLettre: string
+  ) {
     this._grille = document.getElementById("grille") as HTMLElement;
     this._inputArea = document.getElementById("input-area") as HTMLElement;
     this._premiereLettre = premiereLettre;
@@ -32,11 +37,14 @@ export default class Input {
     this._motSaisi = "";
     this._estBloque = new Array<ContexteBloquage>();
     this._resultats = new Array<Array<LettreResultat>>();
-    this._haptiqueActive = configuration.haptique ?? Configuration.Default.haptique;
+    this._haptiqueActive =
+      configuration.haptique ?? Configuration.Default.haptique;
 
     this.ajouterEvenementClavierPhysique();
 
-    this.dessinerClavier(configuration.disposition ?? Configuration.Default.disposition);
+    this.dessinerClavier(
+      configuration.disposition ?? Configuration.Default.disposition
+    );
   }
 
   public dessinerClavier(disposition: ClavierDisposition): void {
@@ -55,12 +63,14 @@ export default class Input {
             lettreDiv.dataset["lettre"] = lettre;
             lettreDiv.innerText = "⌫";
             lettreDiv.classList.add("input-lettre-effacer");
+            lettreDiv.setAttribute("aria-label", "Effacer la dernière lettre");
             this.ajouterFocus(lettreDiv);
             break;
           case "_entree":
             lettreDiv.innerText = "↲";
             lettreDiv.dataset["lettre"] = lettre;
             lettreDiv.classList.add("input-lettre-entree");
+            lettreDiv.setAttribute("aria-label", "Valider le mot");
             this.ajouterFocus(lettreDiv);
             break;
           case "_vide":
@@ -73,6 +83,11 @@ export default class Input {
           default:
             lettreDiv.dataset["lettre"] = lettre;
             lettreDiv.innerText = lettre;
+            if (lettre === ".") {
+              lettreDiv.setAttribute("aria-label", "Mettre un blanc");
+            } else {
+              lettreDiv.setAttribute("aria-label", `Lettre ${lettre}`);
+            }
             this.ajouterFocus(lettreDiv);
         }
         ligneDiv.appendChild(lettreDiv);
@@ -80,7 +95,8 @@ export default class Input {
 
       this._inputArea.appendChild(ligneDiv);
     }
-    this._haptiqueActive = Sauvegardeur.chargerConfig()?.haptique ?? Configuration.Default.haptique;
+    this._haptiqueActive =
+      Sauvegardeur.chargerConfig()?.haptique ?? Configuration.Default.haptique;
     this.ajouterEvenementClavierVirtuel();
     this.remettrePropositions();
   }
@@ -125,7 +141,8 @@ export default class Input {
         event.stopPropagation();
         let div = event.currentTarget;
         if (!div) return;
-        if (this._haptiqueActive && window.navigator.vibrate) window.navigator.vibrate(75);
+        if (this._haptiqueActive && window.navigator.vibrate)
+          window.navigator.vibrate(75);
         let lettre = (div as HTMLElement).dataset["lettre"];
         if (lettre === undefined) {
           return;
@@ -217,17 +234,25 @@ export default class Input {
 
   private siPreremplissageEstReponse(): { preRempli: boolean; mot?: string } {
     let lettrePrerempli = new Array<{ preRempli: boolean; lettre?: string }>();
-    for (let i = 0; i < this._longueurMot; i++) lettrePrerempli.push({ preRempli: false });
+    for (let i = 0; i < this._longueurMot; i++)
+      lettrePrerempli.push({ preRempli: false });
 
     for (let resultat of this._resultats) {
       for (let positionResultat in resultat) {
         let lettreResultat = resultat[positionResultat];
-        if (lettreResultat.statut === LettreStatut.BienPlace) lettrePrerempli[positionResultat] = { preRempli: true, lettre: lettreResultat.lettre };
+        if (lettreResultat.statut === LettreStatut.BienPlace)
+          lettrePrerempli[positionResultat] = {
+            preRempli: true,
+            lettre: lettreResultat.lettre,
+          };
       }
     }
 
     if (lettrePrerempli.every((lettre) => lettre.preRempli)) {
-      return { preRempli: true, mot: lettrePrerempli.reduce((mot, lettre) => mot + lettre.lettre, "") };
+      return {
+        preRempli: true,
+        mot: lettrePrerempli.reduce((mot, lettre) => mot + lettre.lettre, ""),
+      };
     }
 
     return { preRempli: false };
@@ -236,7 +261,11 @@ export default class Input {
   private saisirLettre(lettre: string): void {
     if (this.estBloque()) return;
     if (this._motSaisi.length >= this._longueurMot) return;
-    if (this._motSaisi.length === 0 && lettre.toUpperCase() !== this._premiereLettre) this._motSaisi += this._premiereLettre;
+    if (
+      this._motSaisi.length === 0 &&
+      lettre.toUpperCase() !== this._premiereLettre
+    )
+      this._motSaisi += this._premiereLettre;
     this._motSaisi += lettre;
     this._gestionnaire.actualiserAffichage(this._motSaisi);
   }
@@ -246,7 +275,8 @@ export default class Input {
   }
 
   public debloquer(contexte: ContexteBloquage): void {
-    if (this._estBloque.includes(contexte)) this._estBloque.splice(this._estBloque.indexOf(contexte), 1);
+    if (this._estBloque.includes(contexte))
+      this._estBloque.splice(this._estBloque.indexOf(contexte), 1);
   }
 
   private estBloque(): boolean {
@@ -268,7 +298,8 @@ export default class Input {
     let statutLettres: { [lettre: string]: LettreStatut } = {};
     // console.log(statutLettres);
     for (let resultat of resultats) {
-      if (!statutLettres[resultat.lettre]) statutLettres[resultat.lettre] = resultat.statut;
+      if (!statutLettres[resultat.lettre])
+        statutLettres[resultat.lettre] = resultat.statut;
       else {
         switch (resultat.statut) {
           case LettreStatut.BienPlace:
@@ -300,12 +331,17 @@ export default class Input {
               touche.className = "";
               touche.classList.add("input-lettre");
               touche.classList.add("lettre-bien-place");
+              touche.setAttribute(
+                "aria-label",
+                `Lettre ${lettre}, bien placée`
+              );
               break;
             case LettreStatut.MalPlace:
               if (touche.classList.contains("lettre-bien-place")) break;
               touche.className = "";
               touche.classList.add("input-lettre");
               touche.classList.add("lettre-mal-place");
+              touche.setAttribute("aria-label", `Lettre ${lettre}, mal placée`);
               break;
             default:
               if (touche.classList.contains("lettre-bien-place")) break;
@@ -313,6 +349,10 @@ export default class Input {
               touche.className = "";
               touche.classList.add("input-lettre");
               touche.classList.add("lettre-non-trouve");
+              touche.setAttribute(
+                "aria-label",
+                `Lettre ${lettre}, non présente`
+              );
               break;
           }
         }

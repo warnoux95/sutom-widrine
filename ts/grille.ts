@@ -13,7 +13,12 @@ export default class Grille {
   private _indice: Array<string | undefined>;
   private _motActuel: number;
 
-  public constructor(longueurMot: number, maxPropositions: number, indice: string, audioPanel: AudioPanel) {
+  public constructor(
+    longueurMot: number,
+    maxPropositions: number,
+    indice: string,
+    audioPanel: AudioPanel
+  ) {
     this._grille = document.getElementById("grille") as HTMLElement;
     this._audioPanel = audioPanel;
 
@@ -30,17 +35,23 @@ export default class Grille {
 
   private afficherGrille() {
     let table = document.createElement("table");
+    table.setAttribute("aria-live", "polite");
+    table.setAttribute("aria-label", "Grille de jeu");
     for (let nbMot = 0; nbMot < this._maxPropositions; nbMot++) {
       let ligne = document.createElement("tr");
-      let mot = this._propositions.length <= nbMot ? "" : this._propositions[nbMot];
+      let mot =
+        this._propositions.length <= nbMot ? "" : this._propositions[nbMot];
       if (mot.length > 0) {
         ligne.setAttribute("role", "group");
-        ligne.setAttribute("aria-label", `Mot ${nbMot + 1} sur 6`);
+        ligne.setAttribute("aria-label", `Mot ${nbMot + 1} sur 6, ${mot}`);
       }
       for (let nbLettre = 0; nbLettre < this._longueurMot; nbLettre++) {
         let cellule = document.createElement("td");
         let contenuCellule: string = "";
-        if (nbMot < this._motActuel || (nbMot === this._motActuel && mot.length !== 0)) {
+        if (
+          nbMot < this._motActuel ||
+          (nbMot === this._motActuel && mot.length !== 0)
+        ) {
           if (mot.length <= nbLettre) {
             contenuCellule = ".";
             cellule.classList.add("cellule-lettre-pas-curseur");
@@ -58,24 +69,36 @@ export default class Grille {
             cellule.classList.add("cellule-lettre-pas-curseur");
           }
         }
-        if (this._resultats.length > nbMot && this._resultats[nbMot][nbLettre]) {
+        if (
+          this._resultats.length > nbMot &&
+          this._resultats[nbMot][nbLettre]
+        ) {
           let resultat = this._resultats[nbMot][nbLettre];
           let emoji: string = "🟦";
           switch (resultat.statut) {
             case LettreStatut.BienPlace:
               emoji = "🟥";
               cellule.classList.add("bien-place", "resultat");
-              cellule.setAttribute("aria-label", `Lettre ${resultat.lettre} bien placée`);
+              cellule.setAttribute(
+                "aria-label",
+                `Lettre ${resultat.lettre} bien placée`
+              );
               break;
             case LettreStatut.MalPlace:
               emoji = "🟡";
               cellule.classList.add("mal-place", "resultat");
-              cellule.setAttribute("aria-label", `Lettre ${resultat.lettre} mal placée`);
+              cellule.setAttribute(
+                "aria-label",
+                `Lettre ${resultat.lettre} mal placée`
+              );
               break;
             default:
               emoji = "🟦";
               cellule.classList.add("non-trouve", "resultat");
-              cellule.setAttribute("aria-label", `Lettre ${resultat.lettre} non présente`);
+              cellule.setAttribute(
+                "aria-label",
+                `Lettre ${resultat.lettre} non présente`
+              );
           }
           // console.log(resultat.lettre + " => " + emoji);
         }
@@ -95,7 +118,13 @@ export default class Grille {
     this.afficherGrille();
   }
 
-  public validerMot(mot: string, resultats: Array<LettreResultat>, isBonneReponse: boolean, skipAnimation: boolean = false, endCallback?: () => void): void {
+  public validerMot(
+    mot: string,
+    resultats: Array<LettreResultat>,
+    isBonneReponse: boolean,
+    skipAnimation: boolean = false,
+    endCallback?: () => void
+  ): void {
     this.saisirMot(this._motActuel, mot);
     this.mettreAJourIndice(resultats);
     this._resultats.push(resultats);
@@ -114,7 +143,10 @@ export default class Grille {
     }
   }
 
-  private animerResultats(resultats: Array<LettreResultat>, endCallback?: () => void): void {
+  private animerResultats(
+    resultats: Array<LettreResultat>,
+    endCallback?: () => void
+  ): void {
     let table = this._grille.getElementsByTagName("table").item(0);
     if (table === null) {
       this.afficherGrille();
@@ -133,7 +165,12 @@ export default class Grille {
     this.animerLettre(td, resultats, 0, endCallback);
   }
 
-  private animerLettre(td: HTMLCollectionOf<HTMLTableCellElement>, resultats: Array<LettreResultat>, numLettre: number, endCallback?: () => void): void {
+  private animerLettre(
+    td: HTMLCollectionOf<HTMLTableCellElement>,
+    resultats: Array<LettreResultat>,
+    numLettre: number,
+    endCallback?: () => void
+  ): void {
     if (numLettre >= td.length) {
       this.afficherGrille();
       if (endCallback) endCallback();
@@ -142,21 +179,31 @@ export default class Grille {
     let cellule = td[numLettre];
     let resultat = resultats[numLettre];
     cellule.innerHTML = resultat.lettre;
-    let callback = (() => this.animerLettre(td, resultats, numLettre + 1, endCallback)).bind(this);
+    let callback = (() =>
+      this.animerLettre(td, resultats, numLettre + 1, endCallback)).bind(this);
     switch (resultat.statut) {
       case LettreStatut.BienPlace:
         cellule.classList.add("bien-place", "resultat");
-        cellule.setAttribute("aria-label", `Lettre ${resultat.lettre} bien placée`);
+        cellule.setAttribute(
+          "aria-label",
+          `Lettre ${resultat.lettre} bien placée`
+        );
         this._audioPanel.jouerSonLettreBienPlace(callback);
         break;
       case LettreStatut.MalPlace:
         cellule.classList.add("mal-place", "resultat");
-        cellule.setAttribute("aria-label", `Lettre ${resultat.lettre} mal placée`);
+        cellule.setAttribute(
+          "aria-label",
+          `Lettre ${resultat.lettre} mal placée`
+        );
         this._audioPanel.jouerSonLettreMalPlace(callback);
         break;
       default:
         cellule.classList.add("non-trouve", "resultat");
-        cellule.setAttribute("aria-label", `Lettre ${resultat.lettre} non présente`);
+        cellule.setAttribute(
+          "aria-label",
+          `Lettre ${resultat.lettre} non présente`
+        );
         this._audioPanel.jouerSonLettreNonTrouve(callback);
     }
   }
@@ -164,7 +211,10 @@ export default class Grille {
   private mettreAJourIndice(resultats: Array<LettreResultat>): void {
     for (let i = 0; i < this._indice.length; i++) {
       if (!this._indice[i]) {
-        this._indice[i] = resultats[i].statut === LettreStatut.BienPlace ? resultats[i].lettre : undefined;
+        this._indice[i] =
+          resultats[i].statut === LettreStatut.BienPlace
+            ? resultats[i].lettre
+            : undefined;
       }
     }
   }
