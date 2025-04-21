@@ -8,11 +8,8 @@ export default class NotesMaJPanel {
 
   private readonly _notes = [
     {
-      version: 1210,
-      notes: [
-        "Amélioration de l’accessibilité du jeu",
-        "Correction d’un bug avec le thème clair",
-      ],
+      version: 1200,
+      notes: ["Amélioration de l’accessibilité du jeu", "Correction d’un bug avec le thème clair"],
     },
     {
       version: 851,
