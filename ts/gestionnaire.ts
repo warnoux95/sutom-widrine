@@ -151,7 +151,7 @@ export default class Gestionnaire {
 
     if (this._config.afficherChrono) {
       let statsTemps = this._stats.temps;
-      if (statsTemps === null) {
+      if (!statsTemps || statsTemps === null) {
         statsTemps = { moyenne: duree, nbParties: 1 };
       } else {
         statsTemps = {
