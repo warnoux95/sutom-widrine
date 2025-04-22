@@ -8,14 +8,16 @@ export default class NotesMaJPanel {
 
   private readonly _notes = [
     {
-      version: 1200,
-      notes: ["Amélioration de l’accessibilité du jeu", "Correction d’un bug avec le thème clair"],
+      version: 1201,
+      notes: ["Correction d'un bug empêchant de terminer la partie si on a le chronomètre activé"],
     },
     {
-      version: 851,
+      version: 1200,
       notes: [
-        "Mise à jour des règles concernant la longueur des mots",
+        "Amélioration de l’accessibilité du jeu",
+        "Correction d’un bug avec le thème clair",
         "Correction d'un problème avec le bouton Partie de la veille",
+        "Mise à jour des règles concernant la longueur des mots",
         "Ajout du temps moyen et du nombre total de partie dans les statistiques",
       ],
     },
