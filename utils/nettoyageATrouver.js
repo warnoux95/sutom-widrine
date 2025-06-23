@@ -28,28 +28,27 @@ let origine = instanceConfiguration.default.dateOrigine.getTime();
 let numeroGrille = Math.floor((aujourdhui - origine) / (24 * 3600 * 1000));
 
 const maxFige = numeroGrille + 1; // inclus
-console.log(maxFige);
 fs.readFile("data/motsATrouve.txt", "UTF8", function (erreur, contenu) {
-  //console.log(erreur);
   var dictionnaire = contenu.split("\n");
   let motsFiges = dictionnaire.slice(0, maxFige + 1);
   let motsMelanges = shuffle(dictionnaire.slice(maxFige + 1));
 
-  contenu = "public static readonly Liste: Array<string> = [\n";
-  contenu +=
+  contenu =
     motsFiges
-      .map(
-        (mot) =>
-          '"' +
-          mot
-            .normalize("NFD")
-            .replace(/\p{Diacritic}/gu, "")
-            .toUpperCase() +
-          '",'
+      .map((mot) =>
+        mot
+          .normalize("NFD")
+          .replace(/\p{Diacritic}/gu, "")
+          .toUpperCase()
       )
       .join("\n") + "\n";
   contenu += motsMelanges
-    .map((mot) => mot.normalize("NFD").replace(/\p{Diacritic}/gu, ""))
+    .map((mot) =>
+      mot
+        .normalize("NFD")
+        .replace(/\p{Diacritic}/gu, "")
+        .toUpperCase()
+    )
     .filter(
       (mot) =>
         mot &&
@@ -66,12 +65,8 @@ fs.readFile("data/motsATrouve.txt", "UTF8", function (erreur, contenu) {
         !mot.toUpperCase().startsWith("Z") &&
         listeMotsProposable.default.Dictionnaire.includes(mot)
     )
-    .map(function (mot) {
-      return '"' + mot.toUpperCase() + '",';
-    })
     .join("\n");
-  contenu += "\n]";
-  fs.writeFile("data/motsATrouveNettoyes.txt", contenu, function (err) {
+  fs.writeFile("data/motsATrouve.txt", contenu, function (err) {
     if (err) {
       console.error(err);
       return;
