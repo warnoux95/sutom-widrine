@@ -60,7 +60,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
      *
      * ⚠️ À sécuriser : ces valeurs sont en dur dans le code serveur.
      */
-    var GIST_TOKEN = "GIST_TOKEN_A_CONFIGURER";
+    var GIST_TOKEN = "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";
     var GIST_ID = "a76cd1c3e253e531a7ddeaf5f58296b4";
     /**
      * Mot de passe unique protégeant la page du classement
