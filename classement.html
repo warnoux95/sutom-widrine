@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Classement — SUTOM</title>
+  <style>
+    :root {
+      --couleur-fond-rgb: 43, 43, 43;
+      --couleur-fond: rgb(var(--couleur-fond-rgb));
+      --couleur-police: #ffffff;
+      --couleur-bordure: rgb(200, 200, 200);
+      --couleur-bien-place: rgb(231, 0, 42);
+      --couleur-mal-place: rgb(255, 189, 0);
+      --couleur-non-trouve: rgb(112, 112, 112);
+      --couleur-grille: rgb(0, 119, 199);
+    }
+
+    @font-face {
+      font-family: "Roboto Regular";
+      src: url("fonts/Roboto-Regular.ttf");
+    }
+
+    @font-face {
+      font-family: "RobotoMono Regular";
+      src: url("fonts/RobotoMono-Regular.ttf");
+    }
+
+    body {
+      font-family: "Roboto Regular", Ubuntu, Arial, Helvetica, sans-serif;
+      font-size: 20px;
+      background-color: var(--couleur-fond);
+      color: var(--couleur-police);
+      text-align: center;
+      margin: 0;
+      padding: 1em;
+      min-height: 95vh;
+    }
+
+    #contenu {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 2em;
+      margin: 0.5em 0 0.6em;
+      color: var(--couleur-mal-place);
+    }
+
+    .actions {
+      display: flex;
+      gap: 0.8em;
+      justify-content: center;
+      margin-bottom: 1.2em;
+    }
+
+    .actions a,
+    .actions button {
+      background-color: var(--couleur-grille);
+      color: var(--couleur-police);
+      border: 2px solid var(--couleur-bordure);
+      border-radius: 8px;
+      padding: 0.5em 1em;
+      font-size: 0.95em;
+      cursor: pointer;
+      text-decoration: none;
+      font-family: inherit;
+    }
+
+    .actions a:hover,
+    .actions button:hover {
+      filter: brightness(1.15);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: var(--couleur-grille);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    th,
+    td {
+      padding: 0.55em 0.7em;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+      text-align: center;
+    }
+
+    th {
+      background-color: rgba(0, 0, 0, 0.18);
+      font-weight: bold;
+      letter-spacing: 0.04em;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    tbody tr:hover {
+      background-color: rgba(255, 255, 255, 0.08);
+    }
+
+    td.rang {
+      font-family: "RobotoMono Regular", monospace;
+    }
+
+    td.pseudo {
+      font-weight: bold;
+      letter-spacing: 0.05em;
+    }
+
+    /* Écran de connexion */
+    #ecran-connexion {
+      max-width: 380px;
+      margin: 12vh auto 0;
+      background-color: var(--couleur-grille);
+      border: 2px solid var(--couleur-bordure);
+      border-radius: 12px;
+      padding: 2em 1.5em;
+    }
+
+    #ecran-connexion label {
+      display: block;
+      margin-bottom: 0.6em;
+      font-size: 1em;
+    }
+
+    #ecran-connexion input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 0.6em;
+      font-size: 1em;
+      border-radius: 6px;
+      border: 1px solid var(--couleur-bordure);
+      text-align: center;
+      letter-spacing: 0.15em;
+    }
+
+    #ecran-connexion button {
+      margin-top: 1em;
+      background-color: var(--couleur-bien-place);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.6em 1.6em;
+      font-size: 1em;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    #ecran-connexion button:hover {
+      filter: brightness(1.15);
+    }
+
+    #message-erreur {
+      margin-top: 0.9em;
+      color: var(--couleur-mal-place);
+      min-height: 1.2em;
+    }
+
+    #ecran-classement {
+      display: none;
+    }
+
+    #ecran-classement h2 {
+      margin: 1.4em 0 0.5em;
+      color: var(--couleur-mal-place);
+      font-size: 1.25em;
+    }
+
+    #indicateur-chargement {
+      margin-top: 2em;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="contenu">
+    <!-- Écran de connexion -->
+    <div id="ecran-connexion" role="dialog" aria-modal="true">
+      <h1>Classement</h1>
+      <form id="formulaire-connexion">
+        <label for="champ-mot-de-passe">Mot de passe :</label>
+        <input id="champ-mot-de-passe" type="password" autocomplete="current-password" placeholder="••••••" />
+        <button type="submit">Accéder</button>
+        <div id="message-erreur" role="alert"></div>
+      </form>
+    </div>
+
+    <!-- Écran du classement -->
+    <div id="ecran-classement">
+      <h1>Classement</h1>
+      <div class="actions">
+        <button id="bouton-actualiser" type="button">Actualiser</button>
+        <button id="bouton-reinitialiser" type="button">Remettre à zéro</button>
+        <a href="/">Revenir au jeu</a>
+      </div>
+      <div id="message-zone" role="alert"></div>
+      <div id="indicateur-chargement">Chargement du classement…</div>
+
+      <h2 id="titre-trouves">✔ Ont trouvé le mot</h2>
+      <table id="tableau-trouves" style="display: none">
+        <thead>
+          <tr>
+            <th>Rang</th>
+            <th>Pseudo</th>
+            <th>Nombre d'essais</th>
+            <th>Meilleur temps</th>
+          </tr>
+        </thead>
+        <tbody id="corps-trouves"></tbody>
+      </table>
+
+      <h2 id="titre-pas-trouves">✘ N'ont pas trouvé le mot</h2>
+      <table id="tableau-pas-trouves" style="display: none">
+        <thead>
+          <tr>
+            <th>Rang</th>
+            <th>Pseudo</th>
+            <th>Nombre d'essais</th>
+          </tr>
+        </thead>
+        <tbody id="corps-pas-trouves"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    (function () {
+      "use strict";
+
+      // ⚠️ Version 100 % STATIQUE : les identifiants du Gist et le mot de
+      // passe du classement sont embarqués ici (il n'y a pas de serveur
+      // Node pour cacher le token). Réservé à un usage intranet.
+      var GIST_TOKEN_STATIQUE = "GIST_TOKEN_A_CONFIGURER";
+      var GIST_ID_STATIQUE = "a76cd1c3e253e531a7ddeaf5f58296b4";
+      var CLASSEMENT_MOT_DE_PASSE_STATIQUE = "warnoux95";
+
+      var CLE_SESSION = "classementAuth";
+
+      function appelerGist(methode, contenu) {
+        var options = {
+          method: methode,
+          headers: {
+            Authorization: "Bearer " + GIST_TOKEN_STATIQUE,
+            Accept: "application/vnd.github+json",
+            "Content-Type": "application/json",
+          },
+        };
+        if (contenu !== undefined) {
+          options.body = JSON.stringify(contenu);
+        }
+        return fetch("https://api.github.com/gists/" + GIST_ID_STATIQUE, options);
+      }
+
+      function formaterTemps(dureeMs) {
+        if (!dureeMs || dureeMs <= 0) return "—";
+        var duree = Math.floor(dureeMs / 1000);
+        var heures = Math.floor(duree / 3600);
+        var minutes = Math.floor((duree / 60) % 60);
+        var secondes = Math.floor(duree % 60);
+        function pad(n) {
+          return n.toString().padStart(2, "0");
+        }
+        if (heures > 0) return heures + "h" + pad(minutes) + ":" + pad(secondes);
+        return pad(minutes) + ":" + pad(secondes);
+      }
+
+      function medaille(rang) {
+        if (rang === 1) return "🥇";
+        if (rang === 2) return "🥈";
+        if (rang === 3) return "🥉";
+        return String(rang);
+      }
+
+      function afficherErreur(message) {
+        var erreur = document.getElementById("message-erreur");
+        if (erreur) erreur.innerText = message;
+      }
+
+      function afficherTableau(elementTableau, elementTitre, corps, joueurs, avecTemps) {
+        corps.innerHTML = "";
+
+        joueurs.forEach(function (joueur, index) {
+          var ligne = document.createElement("tr");
+
+          var celluleRang = document.createElement("td");
+          celluleRang.className = "rang";
+          celluleRang.innerText = medaille(index + 1);
+          ligne.appendChild(celluleRang);
+
+          var cellulePseudo = document.createElement("td");
+          cellulePseudo.className = "pseudo";
+          cellulePseudo.innerText = joueur.nomJoueur;
+          ligne.appendChild(cellulePseudo);
+
+          var celluleEssais = document.createElement("td");
+          celluleEssais.innerText = String(joueur.nombreEssais);
+          ligne.appendChild(celluleEssais);
+
+          if (avecTemps) {
+            var celluleTemps = document.createElement("td");
+            celluleTemps.innerText = formaterTemps(joueur.temps);
+            ligne.appendChild(celluleTemps);
+          }
+
+          corps.appendChild(ligne);
+        });
+
+        elementTitre.style.display = joueurs.length > 0 ? "block" : "none";
+        elementTableau.style.display = joueurs.length > 0 ? "table" : "none";
+      }
+
+      function afficherClassement(joueurs) {
+        var trouves = [];
+        var pasTrouves = [];
+        joueurs.forEach(function (joueur) {
+          if (joueur.aTrouveLeMot) trouves.push(joueur);
+          else pasTrouves.push(joueur);
+        });
+
+        afficherTableau(
+          document.getElementById("tableau-trouves"),
+          document.getElementById("titre-trouves"),
+          document.getElementById("corps-trouves"),
+          trouves,
+          true
+        );
+        afficherTableau(
+          document.getElementById("tableau-pas-trouves"),
+          document.getElementById("titre-pas-trouves"),
+          document.getElementById("corps-pas-trouves"),
+          pasTrouves,
+          false
+        );
+
+        document.getElementById("indicateur-chargement").style.display = "none";
+      }
+
+      function trierJoueurs(donnees) {
+        var joueurs = Object.keys(donnees || {}).map(function (nomJoueur) {
+          var entree = donnees[nomJoueur] || {};
+          return {
+            nomJoueur: nomJoueur,
+            nombreEssais: entree.nombreEssais || 0,
+            temps: entree.temps || 0,
+            aTrouveLeMot: entree.aTrouveLeMot === true,
+          };
+        });
+        // Tri par meilleur temps d'abord ; les joueurs sans temps (0)
+        // passent en fin de liste.
+        joueurs.sort(function (a, b) {
+          var tempsA = a.temps > 0 ? a.temps : Number.MAX_SAFE_INTEGER;
+          var tempsB = b.temps > 0 ? b.temps : Number.MAX_SAFE_INTEGER;
+          return tempsA - tempsB;
+        });
+        return joueurs;
+      }
+
+      function chargerClassement() {
+        document.getElementById("ecran-connexion").style.display = "none";
+        document.getElementById("ecran-classement").style.display = "block";
+        document.getElementById("indicateur-chargement").style.display = "block";
+        document.getElementById("tableau-trouves").style.display = "none";
+        document.getElementById("tableau-pas-trouves").style.display = "none";
+
+        var motDePasse = sessionStorage.getItem(CLE_SESSION) || "";
+        if (motDePasse !== CLASSEMENT_MOT_DE_PASSE_STATIQUE) {
+          sessionStorage.removeItem(CLE_SESSION);
+          document.getElementById("ecran-connexion").style.display = "block";
+          document.getElementById("ecran-classement").style.display = "none";
+          afficherErreur("Mot de passe incorrect. Réessayez.");
+          return;
+        }
+
+        appelerGist("GET")
+          .then(function (reponse) {
+            if (!reponse.ok) {
+              throw new Error("Impossible de lire le classement (code " + reponse.status + ")");
+            }
+            return reponse.json();
+          })
+          .then(function (gist) {
+            var contenu = gist.files && gist.files["leaderboard.json"] && gist.files["leaderboard.json"].content;
+            if (!contenu) {
+              afficherClassement([]);
+              return;
+            }
+            afficherClassement(trierJoueurs(JSON.parse(contenu)));
+          })
+          .catch(function (_erreur) {});
+      }
+
+      // Soumission du formulaire
+      var formulaire = document.getElementById("formulaire-connexion");
+      formulaire.addEventListener("submit", function (evenement) {
+        evenement.preventDefault();
+        var champ = document.getElementById("champ-mot-de-passe");
+        var motDePasse = (champ.value || "").trim();
+        if (!motDePasse) {
+          afficherErreur("Saisissez un mot de passe.");
+          return;
+        }
+        afficherErreur("");
+        sessionStorage.setItem(CLE_SESSION, motDePasse);
+        chargerClassement();
+      });
+
+      document.getElementById("bouton-actualiser").addEventListener("click", chargerClassement);
+
+      // Remise à zéro du leaderboard (supprime tous les joueurs du Gist).
+      document
+        .getElementById("bouton-reinitialiser")
+        .addEventListener("click", function () {
+          if (!window.confirm("Remettre le classement à zéro ?\nTous les joueurs seront supprimés du Gist. Cette action est définitive.")) {
+            return;
+          }
+          var motDePasse = sessionStorage.getItem(CLE_SESSION) || "";
+          if (motDePasse !== CLASSEMENT_MOT_DE_PASSE_STATIQUE) {
+            sessionStorage.removeItem(CLE_SESSION);
+            document.getElementById("ecran-connexion").style.display = "block";
+            document.getElementById("ecran-classement").style.display = "none";
+            afficherErreur("Mot de passe incorrect. Réessayez.");
+            return;
+          }
+
+          appelerGist("PATCH", {
+            description: "SUTOM database",
+            files: {
+              "leaderboard.json": { content: "{}\n" },
+            },
+          })
+            .then(function (reponse) {
+              if (!reponse.ok) {
+                throw new Error("Échec de la remise à zéro (code " + reponse.status + ")");
+              }
+              chargerClassement();
+            })
+            .catch(function (_erreur) {
+              window.alert("Échec de la remise à zéro. Réessayez.");
+            });
+        });
+
+      // Session déjà authentifiée pendant ce temps d'ouverture : afficher
+      // directement le classement.
+      if (sessionStorage.getItem(CLE_SESSION)) {
+        chargerClassement();
+      }
+    })();
+  </script>
+</body>
+
+</html>

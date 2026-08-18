@@ -1,0 +1,29 @@
+{
+  "name": "Sutom des widrine",
+  "short_name": "Sutom des widrine",
+  "description": "Jeu de lettres SUTOM des widrine. Trouverez-vous le prénom du jour ?",
+  "theme_color": "#ffbd00",
+  "background_color": "#2b2b2b",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "scope": "./",
+  "start_url": "./",
+  "icons": [
+    {
+      "src": "apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "icone-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icone-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "lang": "fr-FR"
+}

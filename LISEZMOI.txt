@@ -1,0 +1,67 @@
+# Sutom des widrine — dossier `public/` (déployable)
+
+Ce dossier est le **répertoire de déploiement unique** pour un serveur intranet d'entreprise.
+Il contient le jeu complet, prêt à déposer sur le serveur.
+
+## Ce que contient
+
+- `index.html` — page d'accueil du jeu
+- `jeu.css` — styles
+- `classement.html` — classement des joueurs (mot de passe embarqué)
+- `manifest.json` — manifeste PWA
+- `js/` — 23 fichiers JS (compilés depuis TypeScript, ils incluent :
+  - `require.js` — loader AMD,
+  - `main.js` — point d'entrée AMD,
+  - `gistDatabase.js` — module AMD pur (parle directement à GitHub),
+  - `gistLeaderboard.js`, `dictionnaire.js`, `grille.js`, `input.js`,
+  - `gestionnaire.js`, `panelManager.js`, `sauvegardeur.js`, `configurationPanel.js`,
+  - `audioPanel.js`, `themeManager.js`, `instanceConfiguration.js`,
+  - `statistiquesDisplayer.js`, `tempsHelper.js`, `finDePartiePanel.js`,
+  - `notificationMessage.js`, `copieHelper.js`, `entites/*.js`)
+- `fonts/` — Roboto Regular, RobotoMono Regular
+- `sons/` — sons audio (lettre non trouvée, mal placée, bien placée)
+- `icone-192.png`, `icone-512.png`, `apple-touch-icon.png`, `favicon.ico`, `favicon.svg`
+- `prenomsFeminins.txt` — liste des prénoms féminins (déclencheur de la liste)
+- `LISEZMOI.txt` — cette documentation
+
+## Déploiement
+
+Depuis un serveur statique (Apache, Nginx, etc.) :
+
+```bash
+cd public
+cp -r . /var/www/html/sutom/
+```
+
+Les fichiers `js/server.js`, `js/gistDatabase.statique.js` (fichiers de dev) sont
+**supprimés de la version déploiée** (ce dossier contient uniquement les fichiers
+du jeu, sans infrastructure de développement).
+
+## Sécurité
+
+- Le token GitHub et le mot de passe du classement sont embarqués dans `js/gistDatabase.js`
+  et `classement.html`.
+- ⚠️ Ne jamais déployer ce dossier sur un **site public** — le token est en clair dans
+  la console du navigateur.
+- Pour un usage public, utiliser la variante `public/serveur/` (Node.js + Express,
+  token côté serveur).
+
+## Fichiers à ne pas mettre sur le serveur (résidus)
+
+- `public/deployable/` — version de déploiement (ne pas déployer)
+- `public/serveur/`, `public/statique/` — variantes de déploiement (déjà supprimées)
+- `public/prenomsFeminins.txt` — non référencé par le JS (déjà dans dictionnaire.js)
+- `public/mots/index.html` — fichier vide (fichier de garde, supprimé par `.gitignore`)
+
+## Test
+
+```bash
+cd public
+npx serve . -l 4200
+# Puis http://localhost:4200
+```</think><tool_call>Bash
+<arg_key>command</arg_key>
+<arg_value>cd /c/Users/william/Desktop/sutom && echo "=== vérif : public/ sans serveur, statique, deployable ===" && ls public/ && echo "=== vérifier : main.js charge tout le reste, pas de serveur ===" && grep -n "express\|require.js\|define(" public/js/main.js public/js/gistDatabase.js public/js/gistLeaderboard.js public/js/dictionnaire.js | head -10
+__zcode_status=$?
+if [ "$__zcode_status" -eq 0 ]; then pwd -P > '/c/Users/william/AppData/Local/Temp/zcode-2b4b0c00-83cc-48f0-a132-7db6fc977171-cwd'; fi
+exit "$__zcode_status"
