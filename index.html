@@ -8,9 +8,22 @@
   <title>Sutom des widrine</title>
   <script data-main="js/main" type="text/javascript" src="js/require.js"></script>
   <link rel="stylesheet" href="jeu.css" type="text/css" />
+  <style>
+    /* Thème par défaut (Pastel) : appliqué immédiatement pour éviter le
+       flash de la grille bleue avant que le JS charge le thème sauvegardé. */
+    :root {
+      --couleur-fond-rgb: 255, 227, 236;
+      --couleur-police: #7d5266;
+      --couleur-bordure: rgba(255, 255, 255, 0.9);
+      --couleur-icone: rgb(214, 150, 176);
+      --couleur-lettre-speciale: rgb(246, 208, 222);
+      --couleur-lettre-survole: rgb(236, 184, 204);
+      --couleur-lettre-speciale-survole: rgb(226, 160, 186);
+    }
+  </style>
 </head>
 
-<body>
+<body class="pastel-ambiance">
   <div id="contenu">
     <header>
       <div class="header-icones">
