@@ -1,15 +1,13 @@
 /**
  * Accès au Gist GitHub EN DIRECT depuis le navigateur (version STATIQUE).
  *
- * ⚠️ VERSION POUR SERVEUR SANS NODE : le token et le gistId sont embarqués
- * dans le JS client, donc VISIBLES par quiconque ouvre la console du
- * navigateur. Acceptable uniquement pour un serveur interne d'entreprise
- * dont la sécurité est négligée. Ne pas utiliser sur un site public.
+ * ⚠️ VERSION POUR SERVEUR SANS NODE : le token est lu depuis un fichier
+ * hébergé sur wa95.free.fr (pas dans ce dépôt, donc pas de révocation
+ * GitHub). Acceptable pour un usage interne/intranet.
  *
- * Le token N'EST PAS en dur ici : il est lu depuis js/token.json
- * (injecté par deploy.sh depuis config/token.json, jamais commité).
- * En local (fichier absent) le fallback est le placeholder, donc la
- * lecture du gist public fonctionne mais l'écriture est désactivée.
+ * Le token est chargé via <script src="http://wa95.free.fr/token.js">
+ * (pas de CORS pour un script). Si le script est indisponible, repli sur
+ * le placeholder : lecture du gist public OK, écriture désactivée.
  *
  * Même contrat que la version proxy (`/api/gist-file`) :
  *   - lireFichier(nom)   → Promise<string|null> : contenu du fichier
@@ -22,23 +20,27 @@ define([], function () {
     "use strict";
 
     var GIST_ID = "a76cd1c3e253e531a7ddeaf5f58296b4";
+    var URL_TOKEN_EXTERNE = "http://wa95.free.fr/token.js";
 
-    // Récupère le token depuis js/token.json (chargé au démarrage), avec
-    // repli sur la constante ci-dessus si le fichier est absent (local).
+    // Récupère le token depuis le script externe (chargé une seule fois),
+    // avec repli sur la constante ci-dessous si le script est indisponible.
     var GIST_TOKEN = null;
 
     function chargerToken() {
         if (GIST_TOKEN !== null) return Promise.resolve(GIST_TOKEN);
-        return fetch("js/token.json", { cache: "no-store" })
-            .then(function (r) { return r.ok ? r.json() : null; })
-            .then(function (cfg) {
-                GIST_TOKEN = (cfg && cfg.token) ? cfg.token : GIST_TOKEN_CONFIG;
-                return GIST_TOKEN;
-            })
-            .catch(function () {
+        return new Promise(function (resoudre) {
+            var elementScript = document.createElement("script");
+            elementScript.src = URL_TOKEN_EXTERNE;
+            elementScript.onload = function () {
+                GIST_TOKEN = window.SUTOM_GIST_TOKEN || GIST_TOKEN_CONFIG;
+                resoudre(GIST_TOKEN);
+            };
+            elementScript.onerror = function () {
                 GIST_TOKEN = GIST_TOKEN_CONFIG;
-                return GIST_TOKEN;
-            });
+                resoudre(GIST_TOKEN);
+            };
+            document.head.appendChild(elementScript);
+        });
     }
 
     function lireFichier(nomFichier) {
