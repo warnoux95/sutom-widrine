@@ -11,7 +11,7 @@
  *   - ecrireFichier(nom, contenu) → Promise<boolean> (PATCH GitHub)
  * Singleton + file d'écriture (mutex) pour éviter les erreurs 409.
  */
-var GIST_TOKEN_CONFIG = "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";
+var GIST_TOKEN_CONFIG = "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";
 
 define([], function () {
     "use strict";
