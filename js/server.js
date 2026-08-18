@@ -43,7 +43,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "express", "http", "https"], factory);
+        define(["require", "exports", "express", "http", "https", "fs"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -51,6 +51,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     var express_1 = __importDefault(require("express"));
     var http_1 = __importDefault(require("http"));
     var https_1 = __importDefault(require("https"));
+    var fs_1 = __importDefault(require("fs"));
     var app = (0, express_1.default)();
     var port = parseInt(String(process.env.SUTOM_PORT), 10) || 4200;
     /**
@@ -58,10 +59,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
      * Le token et le gistId ne doivent JAMAIS apparaître dans l'URL du
      * navigateur ni dans les requêtes du client (aucun paramètre d'URL).
      *
-     * ⚠️ À sécuriser : ces valeurs sont en dur dans le code serveur.
+     * Le token est lu depuis config/token.json (jamais commité) ou depuis
+     * la variable d'environnement SUTOM_GIST_TOKEN. En l'absence des deux,
+     * repli sur le placeholder (lecture OK car gist public, écriture refusée).
      */
-    var GIST_TOKEN = "GIST_TOKEN_A_CONFIGURER";
+    var GIST_TOKEN = process.env.SUTOM_GIST_TOKEN ||
+        JSON.parse(readOptionalConfig()).token ||
+        "GIST_TOKEN_A_CONFIGURER";
     var GIST_ID = "a76cd1c3e253e531a7ddeaf5f58296b4";
+    function readOptionalConfig() {
+        try {
+            return fs_1.default.readFileSync("config/token.json", "utf8");
+        }
+        catch (_a) {
+            return "{}";
+        }
+    }
     /**
      * Mot de passe unique protégeant la page du classement
      * (`/classement.html`). Stocké UNIQUEMENT côté serveur : il ne doit

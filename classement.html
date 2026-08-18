@@ -237,25 +237,45 @@
       // ⚠️ Version 100 % STATIQUE : les identifiants du Gist et le mot de
       // passe du classement sont embarqués ici (il n'y a pas de serveur
       // Node pour cacher le token). Réservé à un usage intranet.
+      // Le token est lu depuis js/token.json (injecté par deploy.sh depuis
+      // config/token.json, jamais commité). Fallback : constante ci-dessous
+      // (placeholder → lecture OK car gist public, écriture désactivée).
       var GIST_TOKEN_STATIQUE = "GIST_TOKEN_A_CONFIGURER";
       var GIST_ID_STATIQUE = "a76cd1c3e253e531a7ddeaf5f58296b4";
       var CLASSEMENT_MOT_DE_PASSE_STATIQUE = "warnoux95";
 
       var CLE_SESSION = "classementAuth";
+      var tokenCharge = null;
+
+      function chargerToken() {
+        if (tokenCharge !== null) return Promise.resolve(tokenCharge);
+        return fetch("js/token.json", { cache: "no-store" })
+          .then(function (r) { return r.ok ? r.json() : null; })
+          .then(function (cfg) {
+            tokenCharge = (cfg && cfg.token) ? cfg.token : GIST_TOKEN_STATIQUE;
+            return tokenCharge;
+          })
+          .catch(function () {
+            tokenCharge = GIST_TOKEN_STATIQUE;
+            return tokenCharge;
+          });
+      }
 
       function appelerGist(methode, contenu) {
-        var options = {
-          method: methode,
-          headers: {
-            Authorization: "Bearer " + GIST_TOKEN_STATIQUE,
-            Accept: "application/vnd.github+json",
-            "Content-Type": "application/json",
-          },
-        };
-        if (contenu !== undefined) {
-          options.body = JSON.stringify(contenu);
-        }
-        return fetch("https://api.github.com/gists/" + GIST_ID_STATIQUE, options);
+        return chargerToken().then(function (token) {
+          var options = {
+            method: methode,
+            headers: {
+              Authorization: "Bearer " + token,
+              Accept: "application/vnd.github+json",
+              "Content-Type": "application/json",
+            },
+          };
+          if (contenu !== undefined) {
+            options.body = JSON.stringify(contenu);
+          }
+          return fetch("https://api.github.com/gists/" + GIST_ID_STATIQUE, options);
+        });
       }
 
       function formaterTemps(dureeMs) {
