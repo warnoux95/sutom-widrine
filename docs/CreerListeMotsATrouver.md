@@ -1,26 +1,17 @@
-# Créer liste des mots à trouver
+# Créer la liste des mots à trouver
 
-Pour définir la liste des mots qui vont être utilisé par le système, il est nécessaire de créer un fichier data/motsATrouve.txt. Ce fichier doit contenir un mot
-par ligne, de préférence en minuscule.
+> Cette procédure concernait l'instance **originale** du jeu (mot du jour, `data/motsATrouve.txt`, scripts `utils/` et `cron.sh`). **Ces fichiers et scripts ont été supprimés** de cette instance.
 
-Puis, lancer les commandes suivantes :
+## État actuel de cette instance
 
-```sh
-npx tsc
-node utils/nettoyageATrouver.js
-node utils/melangerATrouver.js
-```
+- Le **mot à deviner est fixe** : `PHILOMENE` (défini en dur dans `ts/dictionnaire.ts` → `_motATrouverFixe`).
+- Il n'y a **pas** de mot du jour : `Dictionnaire.getMot()` retourne toujours `PHILOMENE`, quelle que soit la date.
+- Il n'y a **pas** de fichier `public/mots/` utilisé : le dossier existe pour compatibilité avec l'instance d'origine, mais le jeu ne le lit pas.
 
-Ce script va vérifier que les mots se trouvent bien dans le dictionnaire, avant de mélanger le fichier et de le mettre dans le format attendu. Le résultat sera
-placé dans le même fichier, qui va être utilisé ensuite par le script quotidien ./cron.sh. Le mélange ne concernera que les mots qui ne sont pas sorti, à partir
-du surlendemain.
+## Si vous voulez réintroduire un mot du jour
 
-## Règles du mélange
+Il faudrait restaurer les scripts supprimés (`utils/melangerATrouver.js`, `utils/nettoyageATrouver.js`, `cron.sh`) et modifier `Dictionnaire.getMot()` pour lire la liste horodatée au lieu de la constante `PHILOMENE`. Ce n'est pas prévu actuellement.
 
-Dans la mesure du possible, lors du mélange, les règles suivantes vont être respectées :
+## Pour les prénoms jouables
 
-- La longueur du mot est différente de celle du mot précédent,
-- L'initial du mot est différente de l'initiale des cinq mots précédents.
-
-Le script tire un mot au hasard, et regarde s'il respecte les règles. Si oui, il est gardé, sinon, un autre est tiré. Au bout d'un certain nombre d'echec, le
-script abandonne, et va juste placer les mots non encore tiré à la fin du fichier.
+La liste des prénoms **proposables** par les joueurs est le dictionnaire (voir `MettreAJourLeDictionnaire.md`) : il se compose de prénoms féminins de 9 lettres, en dur dans `ts/dictionnaire.ts` et `public/prenomsFeminins.txt`.

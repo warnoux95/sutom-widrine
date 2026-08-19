@@ -1,18 +1,33 @@
 # Mettre à jour le dictionnaire
 
-Si vous souhaitez mettre à jour le dictionnaire, ou y ajouter des mots, il faut modifier le fichier data/mots.txt. Ce fichier comporte un mot par ligne, et sert de base pour la génération des autres fichiers.
+Dans cette instance, le dictionnaire des prénoms jouables est **intégré au code** : il n'est plus généré depuis un fichier `data/mots.txt` (supprimé).
 
-Pour générer les fichiers listeMotsProposables, qui servent de dictionnaire, il faut appeler la commande suivante, depuis la racine de l'instance :
+## Où se trouve le dictionnaire
 
-```sh
-node utils/nettoyage.js
-```
+- **`ts/dictionnaire.ts`** — le tableau `chargerDictionnaire()` contient les prénoms valides (uniquement des **prénoms féminins de 9 lettres**).
+- **`public/prenomsFeminins.txt`** — la liste de référence (mêmes prénoms, un par ligne, en majuscules, sans accents).
 
-Ce script va vérifier la liste des mots, ne garder que les mots acceptés dans les règles, les formater correctement (les mettre en majuscule, et enlevé les accents), puis les découper par longueur et par initiale, dans les fichiers ts/mots/listeMotsProposables.\*.
+## Comment ajouter un prénom
 
-Liste des règles suivi par les mots :
+1. **Vérifier la longueur** : le prénom doit faire exactement **9 lettres** (sinon il ne pourra jamais être proposé — le mot à deviner est de 9 lettres).
+2. **Ajouter le prénom** dans **les deux fichiers** (le tableau de `ts/dictionnaire.ts` ET le fichier `public/prenomsFeminins.txt`), en majuscules et sans accents :
+   ```
+   GHISLAINE  →  ts/dictionnaire.ts (entre GUADALUPE et CLAUDETTE) + prenomsFeminins.txt
+   ```
+3. **Recompiler** le TypeScript :
+   ```sh
+   npx tsc
+   ```
+4. **Redéployer** (si le site doit être à jour en ligne) :
+   ```sh
+   ./deploy.sh
+   ```
 
-- Le mot n'est pas un nom propre (qui commence par une majuscule dans le fichier mots.txt)
-- Le mot est entre 6 et 10 lettres
-- Le mot ne commence pas par une lettre rare, à savoir : K, Q, W, X, Y, Z
-- Le mot ne contient pas d'espace, d'apostrophe ou de trait d'union
+## Règles suivies par les prénoms du dictionnaire
+
+- Le prénom est **féminin**.
+- Le prénom fait **exactement 9 lettres**.
+- Le prénom est écrit **sans accents** (accents ignorés au nettoyage via `nettoyerMot()`).
+- Les lettres en double et l'ordre alphabétique n'ont pas d'importance pour la validation (une simple recherche dans le tableau).
+
+> ⚠️ Le mot à deviner est **fixe** (`PHILOMENE`, défini en dur) : ajouter un prénom au dictionnaire le rend **proposable** par les joueurs, il ne change pas le mot à trouver.
