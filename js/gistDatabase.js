@@ -2,10 +2,10 @@
  * Accès au Gist GitHub EN DIRECT depuis le navigateur (version STATIQUE).
  *
  * ⚠️ VERSION POUR SERVEUR SANS NODE : le token est lu depuis un fichier
- * hébergé sur wa95.free.fr (pas dans ce dépôt, donc pas de révocation
- * GitHub). Acceptable pour un usage interne/intranet.
+ * hébergé sur hivtoolsresistance.com (pas dans ce dépôt, donc pas de
+ * révocation GitHub). Acceptable pour un usage interne/intranet.
  *
- * Le token est chargé via <script src="http://wa95.free.fr/token.js">
+ * Le token est chargé via <script src="https://hivtoolsresistance.com/token.js">
  * (pas de CORS pour un script). Si le script est indisponible, repli sur
  * le placeholder : lecture du gist public OK, écriture désactivée.
  *
@@ -20,7 +20,7 @@ define([], function () {
     "use strict";
 
     var GIST_ID = "a76cd1c3e253e531a7ddeaf5f58296b4";
-    var URL_TOKEN_EXTERNE = "http://wa95.free.fr/token.js";
+    var URL_TOKEN_EXTERNE = "https://hivtoolsresistance.com/token.js";
 
     // Récupère le token depuis le script externe (chargé une seule fois),
     // avec repli sur la constante ci-dessous si le script est indisponible.
