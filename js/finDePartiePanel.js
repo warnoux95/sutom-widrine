@@ -138,7 +138,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
         };
         FinDePartiePanel.prototype.afficher = function () {
             return __awaiter(this, void 0, void 0, function () {
-                var titre, contenu, description, rejouerButton;
+                var titre, contenu, naissance, jour, mois, annee, heures, minutes, description, rejouerButton;
                 var _this = this;
                 return __generator(this, function (_a) {
                     contenu = "";
@@ -149,7 +149,25 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
                     else {
                         if (this._estVictoire) {
                             titre = "Félicitations";
-                            contenu += '<p class="fin-de-partie-panel-phrase">Bravo, tu as gagné.</p>';
+                            contenu += '<p class="fin-de-partie-panel-phrase">Félicitations, tu as trouvé le prénom de notre fille.</p>';
+                            naissance = instanceConfiguration_1.default.naissancePhilomene;
+                            jour = String(naissance.getDate()).padStart(2, "0");
+                            mois = String(naissance.getMonth() + 1).padStart(2, "0");
+                            annee = naissance.getFullYear();
+                            heures = String(naissance.getHours()).padStart(2, "0");
+                            minutes = String(naissance.getMinutes()).padStart(2, "0");
+                            contenu +=
+                                '<p class="fin-de-partie-panel-phrase">Philomène est née le ' +
+                                    jour +
+                                    "/" +
+                                    mois +
+                                    "/" +
+                                    annee +
+                                    " à " +
+                                    heures +
+                                    ":" +
+                                    minutes +
+                                    ".</p>";
                             description = dictionnaire_1.default.getDescription(this._motATrouver);
                             if (description) {
                                 contenu += '<p class="fin-de-partie-panel-phrase">' + description + "</p>";

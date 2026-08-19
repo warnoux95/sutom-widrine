@@ -14,6 +14,12 @@
         }
         InstanceConfiguration.dateOrigine = new Date(2022, 0, 8); // Attention, c'est du js/ts, donc pour le mois, il faut faire -1, Janvier = 0 !
         InstanceConfiguration.idPartieParDefaut = "34ccc522-c264-4e51-b293-fd5bd60ef7aa";
+        /**
+         * Date et heure de naissance de Philomène, affichées dans le panneau
+         * de victoire du jeu. À personnaliser pour chaque instance.
+         * (mois : 0 = janvier, donc 2 = mars)
+         */
+        InstanceConfiguration.naissancePhilomene = new Date(2024, 2, 15, 9, 30);
         return InstanceConfiguration;
     }());
     exports.default = InstanceConfiguration;
