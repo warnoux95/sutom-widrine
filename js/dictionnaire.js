@@ -98,6 +98,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
                             "CONSTANCE",
                             "EMILIENNE",
                             "ELIZABETH",
+                            "FRANCIANE",
                             "FRANCOISE",
                             "GABRIELLE",
                             "GENEVIEVE",
@@ -136,6 +137,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
                             "BENEDICTE",
                             "MAGDALENA",
                             "GUADALUPE",
+                            "GHISLAINE",
                             "CLAUDETTE",
                             "CLOTHILDE",
                         ]];
